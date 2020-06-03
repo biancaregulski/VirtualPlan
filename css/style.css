@@ -1,0 +1,46 @@
+body {
+	margin: 0;
+}
+
+#day-of-week {
+	text-align: center;
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	grid-template-rows: 1;
+	background-color: lavender;
+}
+
+#app-calendar {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	height: 85vh;		/* takes up 80% of screen */
+}
+
+.day-name {
+	padding: 1vh;
+	border-top: 1px solid midnightblue;
+	border-bottom: 1px solid midnightblue;
+	border-right: 1px solid midnightblue;
+}
+
+.day {
+	border-bottom: 1px solid midnightblue;
+	border-right: 1px solid midnightblue;
+	text-align: right;
+	padding-top: 10px;
+	padding-right: 10px;
+	font-size: 14px;
+	cursor: pointer;
+	background-color: lightcyan;
+	transition: background-color 200ms, color 200ms;
+}
+
+.name {
+	padding-bottom: 5px;
+}
+
+.selected {
+	background-color: thistle;
+	color: white;
+}
