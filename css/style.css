@@ -1,39 +1,76 @@
+:root {
+	--color-day-of-week:lavender;
+	--color-border: midnightblue;
+	--color-calendar-box: lightcyan;
+	--color-button: gainsboro;
+	font-family: 'Helvetica', 'Arial', sans-serif;
+};
+
 body {
 	margin: 0;
 }
 
+#header {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.header-row{
+	display: inline-block;
+	vertical-align: middle;			/* doesn't work */
+	margin: 10px 0;
+}
+
+#forward-arrow {
+	float:right;
+	vertical-align: middle;
+}
+
+#month-year {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 20px;
+}
+
 #day-of-week {
+	clear: right;		/* removes effect by forward-arrow's float-right */
 	text-align: center;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	grid-template-rows: 1;
-	background-color: lavender;
+	background-color: var(--color-day-of-week);
+	border-left: 1px solid var(--color-border);
 }
 
 #app-calendar {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	grid-template-rows: repeat(5, 1fr);
-	height: 85vh;		/* takes up 80% of screen */
+	height: 85vh;		/* takes up 85% of screen */
+	border-left: 1px solid var(--color-border);
 }
 
 .day-name {
 	padding: 1vh;
-	border-top: 1px solid midnightblue;
-	border-bottom: 1px solid midnightblue;
-	border-right: 1px solid midnightblue;
+	border-top: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
+	border-right: 1px solid var(--color-border);
 }
 
 .day {
-	border-bottom: 1px solid midnightblue;
-	border-right: 1px solid midnightblue;
-	text-align: right;
-	padding-top: 10px;
-	padding-right: 10px;
-	font-size: 14px;
+	border-bottom: 1px solid var(--color-border);
+	border-right: 1px solid var(--color-border);
 	cursor: pointer;
-	background-color: lightcyan;
-	transition: background-color 200ms, color 200ms;
+	background-color: var(--color-calendar-box);
+	transition: background-color 300ms, color 300ms;
+}
+
+.day-number {
+	text-align: right;
+	font-size: 14px;
+	padding-right: 10px;
 }
 
 .name {
@@ -43,4 +80,34 @@ body {
 .selected {
 	background-color: thistle;
 	color: white;
+}
+
+.eventButton {
+	margin-left: 10px;
+	cursor: pointer;
+	background-color: var(--color-button);
+	font-size: 14px;
+	color: black;
+	border: 1px solid var(--color-border);
+	padding: 12px 24px;
+	transition: background-color 300ms, color 300ms;
+}
+
+.eventButton:hover {
+	background-color: var(--color-calendar-box);
+}
+
+.arrowButton {
+	cursor: pointer;
+	background: none;
+	border: none;
+	font-size: 24px;
+}
+
+.disable-select {
+    user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
 }
