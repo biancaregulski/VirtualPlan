@@ -1,8 +1,10 @@
 :root {
-	--color-day-of-week:lavender;
-	--color-border: midnightblue;
-	--color-calendar-box: lightcyan;
-	--color-button: gainsboro;
+	--color-day-of-week: #2aa188;
+	--color-border: lightgray;
+	--color-calendar-box: #f7ffff;
+	--color-calendar-box-hover: #d6fff4;
+	--color-button: whitesmoke;
+	--color-button-hover: #d6fff4;
 	font-family: 'Helvetica', 'Arial', sans-serif;
 };
 
@@ -32,13 +34,14 @@ body {
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	font-size: 20px;
+	font-size: 22px;
 }
 
 #day-of-week {
 	clear: right;		/* removes effect by forward-arrow's float-right */
 	text-align: center;
 	display: grid;
+	color: white;
 	grid-template-columns: repeat(7, 1fr);
 	background-color: var(--color-day-of-week);
 	border-left: 1px solid var(--color-border);
@@ -64,7 +67,7 @@ body {
 	border-right: 1px solid var(--color-border);
 	cursor: pointer;
 	background-color: var(--color-calendar-box);
-	transition: background-color 300ms, color 300ms;
+	transition: background-color 300ms, color 300ms
 }
 
 .day-number {
@@ -94,7 +97,7 @@ body {
 }
 
 .eventButton:hover {
-	background-color: var(--color-calendar-box);
+	background-color: var(--color-button-hover);
 }
 
 .arrowButton {
