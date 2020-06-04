@@ -1,10 +1,11 @@
 :root {
+	--color-title-header: #01755e;
 	--color-day-of-week: #2aa188;
 	--color-border: lightgray;
 	--color-calendar-box: #f7ffff;
 	--color-calendar-box-hover: #d6fff4;
 	--color-button: whitesmoke;
-	--color-button-hover: #d6fff4;
+	--color-button-hover: lightgray;
 	font-family: 'Helvetica', 'Arial', sans-serif;
 };
 
@@ -12,33 +13,44 @@ body {
 	margin: 0;
 }
 
+#page {
+	padding: 0 10% 0 10%;
+}
+
+#button-login {
+	float: right;
+}
+
+h1 {
+	color: var(--color-title-header);
+	margin: 0;
+	padding-bottom: 10px;
+	clear: right;
+	text-align: center;
+	font-size: 38px;
+	border-bottom: 1px solid var(--color-border); 
+}
+
 #header {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	padding-left: 10px;
-	padding-right: 10px;
+	margin: 5px 0 5px 0;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	align-items: center;
 }
 
-.header-row{
-	display: inline-block;
-	vertical-align: middle;			/* doesn't work */
-	margin: 10px 0;
+.header-center {
+	text-align: center;
+	
 }
-
-#forward-arrow {
-	float:right;
-	vertical-align: middle;
-}
+.header-center > p{
+	display:inline-block;
+  }
 
 #month-year {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
 	font-size: 22px;
 }
 
 #day-of-week {
-	clear: right;		/* removes effect by forward-arrow's float-right */
 	text-align: center;
 	display: grid;
 	color: white;
@@ -86,18 +98,25 @@ body {
 }
 
 .eventButton {
-	margin-left: 10px;
 	cursor: pointer;
 	background-color: var(--color-button);
 	font-size: 14px;
 	color: black;
 	border: 1px solid var(--color-border);
-	padding: 12px 24px;
+	padding: 10px 20px;
 	transition: background-color 300ms, color 300ms;
 }
 
 .eventButton:hover {
 	background-color: var(--color-button-hover);
+}
+
+#button-add-event {
+	margin-right: 10px;
+}
+
+#button-login {
+	padding: 6px 12px;
 }
 
 .arrowButton {

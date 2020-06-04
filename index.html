@@ -5,15 +5,23 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<div id="header">
-			<button class="header-row, arrowButton" id=back-arrow>◄</h2>
-			<button class="header-row, eventButton" id="button-add-event" type="button" onclick="">Add Event</button>
-			<button class="header-row, eventButton" id="button-delete-event" type="button" onclick="">Delete Event</button>
-			<p class="header-row" id="month-year">June 2020</p>
-			<button class="header-row, arrowButton" id=forward-arrow>▶</h2>
+		<div id="page">
+			<button class="eventButton" id="button-login">Log in</button>
+			<h1>Virtual Plan</h1>
+			<div id="header">
+				<div class="header-left">
+					<button class="eventButton" id="button-add-event" type="button" onclick="">Add Event</button>
+					<button class="eventButton" id="button-delete-event" type="button" onclick="">Delete Event</button>
+				</div>
+				<div class="header-center">
+					<button class= "arrowButton" id=back-arrow>◄</h2></button>
+					<p id="month-year"></p>
+					<button class="arrowButton" id=forward-arrow>▶</h2></button>
+				</div>
+			</div>
+			<div id="day-of-week"></div>
+			<div class="disable-select" id="app-calendar"></div>
 		</div>
-		<div id="day-of-week"></div>
-		<div class="disable-select" id="app-calendar"></div>
 		<script type="text/javascript" src="js/script.js"></script>
 	</body>
 </html> 
