@@ -1,9 +1,17 @@
+/* 
+Virtual Plan
+Code by Bianca Regulski
+Released under the public domain
+*/
+
 :root {
-	--color-title-header: #01755e;
-	--color-day-of-week: #2aa188;
+	--color-banner-spring: #724E9E;
+	--color-banner-summer: #2aa188;
+	--color-banner-fall: #ED832F;
+	--color-banner-winter: #224CBE;
 	--color-border: lightgray;
-	--color-calendar-box: #f7ffff;
-	--color-calendar-box-hover: #d6fff4;
+	--color-calendar-box: white;
+	--color-calendar-box-selected: whitesmoke;
 	--color-button: whitesmoke;
 	--color-button-hover: lightgray;
 	font-family: 'Helvetica', 'Arial', sans-serif;
@@ -17,18 +25,14 @@ body {
 	padding: 0 10% 0 10%;
 }
 
-#button-login {
-	float: right;
-}
-
 h1 {
-	color: var(--color-title-header);
 	margin: 0;
-	padding-bottom: 10px;
-	clear: right;
+	padding: 20px 0 20px 0;
+	color: white;
 	text-align: center;
 	font-size: 38px;
 	border-bottom: 1px solid var(--color-border); 
+	transition: color 2s;
 }
 
 #header {
@@ -37,14 +41,17 @@ h1 {
 	grid-template-columns: repeat(3, 1fr);
 	align-items: center;
 }
-
 .header-center {
 	text-align: center;
 	
 }
 .header-center > p{
 	display:inline-block;
-  }
+}
+  
+#button-login, #button-register {
+	float: right;
+}
 
 #month-year {
 	font-size: 22px;
@@ -55,15 +62,14 @@ h1 {
 	display: grid;
 	color: white;
 	grid-template-columns: repeat(7, 1fr);
-	background-color: var(--color-day-of-week);
 	border-left: 1px solid var(--color-border);
+	transition: background-color 2s, color 2s;
 }
 
 #app-calendar {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	grid-template-rows: repeat(5, 1fr);
-	height: 85vh;		/* takes up 85% of screen */
 	border-left: 1px solid var(--color-border);
 }
 
@@ -78,8 +84,9 @@ h1 {
 	border-bottom: 1px solid var(--color-border);
 	border-right: 1px solid var(--color-border);
 	cursor: pointer;
+	height: 15vh;
 	background-color: var(--color-calendar-box);
-	transition: background-color 300ms, color 300ms
+	transition: background-color 300ms, color 300ms;
 }
 
 .day-number {
@@ -111,19 +118,20 @@ h1 {
 	background-color: var(--color-button-hover);
 }
 
-#button-add-event {
+#button-add-event, #button-register {
 	margin-right: 10px;
 }
 
-#button-login {
-	padding: 6px 12px;
-}
-
+/* TODO: arrow positions should not change when month length changes */
 .arrowButton {
 	cursor: pointer;
 	background: none;
 	border: none;
 	font-size: 24px;
+}
+
+button:focus {
+    outline: 0;
 }
 
 .disable-select {

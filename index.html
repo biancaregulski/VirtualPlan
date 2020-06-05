@@ -1,3 +1,9 @@
+<!-- 
+Virtual Plan
+Code by Bianca Regulski
+Released under the public domain
+-->
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -6,8 +12,7 @@
 	</head>
 	<body>
 		<div id="page">
-			<button class="eventButton" id="button-login">Log in</button>
-			<h1>Virtual Plan</h1>
+			<h1 id="title-header">Virtual Plan</h1>
 			<div id="header">
 				<div class="header-left">
 					<button class="eventButton" id="button-add-event" type="button" onclick="">Add Event</button>
@@ -18,8 +23,13 @@
 					<p id="month-year"></p>
 					<button class="arrowButton" id=forward-arrow>▶</h2></button>
 				</div>
+				<div class="header-right">
+					<button class="eventButton" id="button-login">Log in</button>
+					<button class="eventButton" id="button-register">Register</button>
+
+				</div>
 			</div>
-			<div id="day-of-week"></div>
+			<div class="disable-select" id="day-of-week"></div>
 			<div class="disable-select" id="app-calendar"></div>
 		</div>
 		<script type="text/javascript" src="js/script.js"></script>
