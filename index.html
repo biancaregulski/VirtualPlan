@@ -17,41 +17,41 @@ Released under the public domain
 			<div id="header">
 				<div class="header-left">
 					<button class="eventButton" id="button-add-event" type="button">Add Event</button>
-					<div id="modal-add" class="modal">
-						<div class="modal-content">
-							<span class="close">&times;</span>
-							<h2 id="modal-title">New Event</h2>
-							<input type="text" id="eventname" name="event-name" placeholder="Event name"/>
-							
-							<input type="text" id="locname" name="location-name" placeholder="Location"/>
-
-							<div class="row">
-								<input type="time" id="time-input-start" name="time-input"/>
-								<input type="time" id="time-input-end" name="time-input"/>
-								<div style="clear:both;"></div> 
-								<p id="to">to</p>
-							</div>
-							<div style="margin-top:10px" >
-								<label id="all-day">
-									<input type="checkbox" id="all-day-checkbox" name="checkboxallday"/>All day
-								</label>
-							</div>
-							<br>
-							<button class="eventButton" id="button-add-confirm">Add</button>
-						</div>
-					</div>
-					<button class="eventButton" id="button-delete-event" type="button" onclick="">Delete Event</button>
+					<!--<button class="eventButton" id="button-delete-event" type="button" onclick="">Delete Event</button>-->
 				</div>
 				<div class="header-center">
-					<button class= "arrowButton" id=back-arrow>◄</h2></button>
+					<button class= "arrowButton" id=back-arrow>◄</button>
 					<p id="month-year"></p>
-					<button class="arrowButton" id=forward-arrow>▶</h2></button>
+					<button class="arrowButton" id=forward-arrow>▶</button>
 				</div>
 				<div class="header-right">
 					<button class="eventButton" id="button-login">Log in</button>
 					<button class="eventButton" id="button-register">Register</button>
 
 				</div>
+					<div id="modal-add" class="modal">
+						<div class="modal-content">
+							<form action="/action_page.php" method="post" name="form1" id="form1"> 
+								<span class="close">&times;</span>
+								<h2 id="modal-title">New Event</h2>
+								<input type="text" id="event-name" name="eventname" placeholder="Event name" required/>
+								<input type="text" id="location-name" name="locationname" placeholder="Location" required/>
+								<div class="row">
+									<input type="time" id="time-input-start" name="time-input" required/>
+									<input type="time" id="time-input-end" name="time-input" required/>
+									<div style="clear:both;"></div> 
+									<p id="to">to</p>
+								</div>
+								<div style="margin-top:10px" >
+									<label id="all-day">
+										<input type="checkbox" id="all-day-checkbox" name="checkboxallday"/>All day
+									</label>
+								</div>
+								<br>   
+								<input class="submit-button" id="button-add-submit" type="submit" value="Add">
+							</form>
+						</div>
+					</div>
 			</div>
 			<div class="disable-select" id="day-of-week"></div>
 			<div class="disable-select" id="app-calendar"></div>

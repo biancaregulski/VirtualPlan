@@ -17,7 +17,7 @@ Released under the public domain
 	--color-line: darkgray;
 	--color-input: darkgray;
 	--color-diamond: gray;
-	--color-main-font: #737373;
+	--color-main-font: #575757;
 	font-family: 'Helvetica', 'Arial', sans-serif;
 };
 
@@ -126,7 +126,7 @@ h1 {
 	color: white;
 }
 
-.eventButton {
+.eventButton, .submit-button {
 	cursor: pointer;
 	background-color: var(--color-button);
 	font-size: 14px;
@@ -136,7 +136,7 @@ h1 {
 	transition: background-color 300ms, color 300ms;
 }
 
-.eventButton:hover {
+.eventButton:hover, .submit-button:hover {
 	background-color: var(--color-button-hover);
 }
 
@@ -252,7 +252,7 @@ input[type=text] {
 	word-wrap: break-word;
 }
 
-#button-add-confirm {
+#button-add-submit {
 	margin: 0 auto;
     display: block;
 	padding: 10px 40px;

@@ -113,14 +113,24 @@ document.getElementById("forward-arrow").onclick = function() {
     }
 }
 
+document.getElementById("button-login").onclick = function() {
+	alert("To be implemented");
+}
+
+document.getElementById("button-register").onclick = function() {
+	alert("To be implemented");
+}
+
 var modalAdd = document.getElementById("modal-add");
+var submitAddButton = document.getElementById("button-add-submit");
 
 document.getElementById("button-add-event").onclick = function() {
+	allDayCheckBox.checked = false;			// unchecked by default
 	let currentColor = seasonColors[getSeason()];
 	document.getElementById("modal-title").style.color = currentColor;
-	document.getElementById("button-add-confirm").style.backgroundColor = currentColor;
-	document.getElementById("button-add-confirm").style.backgroundColor = currentColor;
-	document.getElementById("button-add-confirm").style.color = "white";
+	submitAddButton.style.backgroundColor = currentColor;
+	submitAddButton.style.backgroundColor = currentColor;
+	submitAddButton.style.color = "white";
 	modalAdd.style.display = "block";
 }
 
@@ -128,14 +138,63 @@ document.getElementsByClassName("close")[0].onclick = function() {
 	modalAdd.style.display = "none";
 }
 
-/* close modal by clicking outside of it */
+// close modal by clicking outside of it
 window.onclick = function(event) {
 	if (event.target == modalAdd) {
 		modalAdd.style.display = "none";
 	}
 }
 
-// TODO: if final days go beyond 5th row, combine with other day box
+const eventName = document.getElementById("event-name");
+const locationName = document.getElementById("location-name");
+const startTime = document.getElementById("time-input-start");
+const endTime = document.getElementById("time-input-end");
+const allDayCheckBox = document.getElementById("all-day-checkbox");
+
+// enable/disable time inputs according to checkbox state
+allDayCheckBox.addEventListener('change', (event) => {
+	if (event.target.checked) {
+		startTime.disabled = true;
+		endTime.disabled = true;
+	} 
+	else {
+		startTime.disabled = false;
+		endTime.disabled = false;
+	}
+});
+
+document.getElementById("form1").addEventListener("submit", submitAddEvent);
+
+function submitAddEvent() {
+	alert("test");
+	let selectedDate = getSelectedDates();
+	let startTime = new Date(displayYear, displayMonth, selectedDate);
+	let endTime = new Date(displayYear, displayMonth, selectedDate);
+	if (allDayCheckBox.checked) {
+		// all day -- start at midnight, end at 23:59
+		startTime.setHours(0);
+		startTime.setMinutes(0);
+		endTime.setHours(23);
+		endTime.setMinutes(59);
+	}
+	else {
+		// get hours and minutes from time selector
+		startTime.setHours(startTime.valueAsDate.getHours());
+		startTime.setMinutes(startTime.valueAsDate.getMinutes());
+		endTime.setHours(endTime.valueAsDate.getHours());
+		endTime.setMinutes(endTime.valueAsDate.getMinutes());
+	}
+}
+
+function getSelectedDates() {
+	for (var i = 0; i < days.length; i++) {
+	   if (days[i].selected == true) {
+		   return i + 1;
+	   }
+	}
+	return null;
+}
+
 function updateMonth() {
   document.getElementById("month-year").innerText = months[displayMonth].concat(' ', displayYear);
   let firstDateStarted = false;
