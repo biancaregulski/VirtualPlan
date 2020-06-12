@@ -29,9 +29,16 @@ Released under the public domain
 					<button class="eventButton" id="button-register">Register</button>
 
 				</div>
+					<div id="modal-add-alert" class="modal">
+						<div class="modal-content">
+							<span class="close">&times;</span>
+							<p class="alert-text">Select one or more days to add an event.</p>
+							<button class="eventButton modal-button" id="button-add-alert">OK</button>
+						</div>
+					</div>
 					<div id="modal-add" class="modal">
 						<div class="modal-content">
-							<form action="/action_page.php" method="post" name="form1" id="form1"> 
+							<form action="/action_page.php" method="post" name="form1" id="form-add-event"> 
 								<span class="close">&times;</span>
 								<h2 id="modal-title">New Event</h2>
 								<input type="text" id="event-name" name="eventname" placeholder="Event name" required/>
@@ -48,7 +55,7 @@ Released under the public domain
 									</label>
 								</div>
 								<br>   
-								<input class="submit-button" id="button-add-submit" type="submit" value="Add">
+								<input class="submit-button modal-button" id="button-add-submit" type="submit" value="Add">
 							</form>
 						</div>
 					</div>

@@ -5,14 +5,22 @@ Released under the public domain
 */
 
 :root {
+	/* colors for days of the week by season */
 	--color-banner-spring: #724E9E;
 	--color-banner-summer: #2aa188;
 	--color-banner-fall: #ED832F;
 	--color-banner-winter: #224CBE;
+	
+	/* colors for event labels by season */
+	--color-event-spring: #f0defa;
+	--color-event-summer: #dbfff3;
+	--color-event-fall: #fcd8a2;
+	--color-event-winter: #cce1ff;
+	
 	--color-border: lightgray;
 	--color-calendar-box: white;
 	--color-calendar-box-selected: whitesmoke;
-	--color-button: #e6e6e6;
+	--color-button: #E6E6E6;
 	--color-button-hover: lightgray;
 	--color-line: darkgray;
 	--color-input: darkgray;
@@ -93,6 +101,7 @@ h1 {
 	grid-template-columns: repeat(7, 1fr);
 	grid-template-rows: repeat(5, 1fr);
 	border-left: 1px solid var(--color-border);
+	overflow: auto;
 }
 
 .day-name {
@@ -106,15 +115,17 @@ h1 {
 	border-bottom: 1px solid var(--color-border);
 	border-right: 1px solid var(--color-border);
 	cursor: pointer;
-	height: 15vh;
+	height: 18vh;
 	background-color: var(--color-calendar-box);
 	transition: background-color 300ms, color 300ms;
+	overflow: auto;
 }
 
 .day-number {
 	text-align: right;
 	font-size: 14px;
 	padding-right: 10px;
+	margin: 10px 10px 0 10px
 }
 
 .name {
@@ -124,6 +135,14 @@ h1 {
 .selected {
 	background-color: thistle;
 	color: white;
+}
+
+.event {
+	font-size: 13px;
+	border-radius: 4px;
+	margin: 8px;
+	padding: 4px 8px;
+	overflow: auto;
 }
 
 .eventButton, .submit-button {
@@ -161,11 +180,19 @@ h1 {
 #modal-title {
 	text-align: center;
 }
+
+.alert-text {
+	padding-top: 20px;
+	text-align: center;
+	line-height: 24px;
+}
+
 .modal-content {
+	position: relative;
 	background-color: #fefefe;
 	margin: auto;
 	display: block;
-	padding: 40px;
+	padding: 20px;
 	border: 1px solid #888;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 	width: 40vh;
@@ -173,8 +200,10 @@ h1 {
 }
 
 .close {
+	float:right;
+	clear: right;
 	color: #aaa;
-	float: right;
+	margin-bottom: 10px;
 	font-size: 28px;
 	font-weight: bold;
 }
@@ -252,7 +281,7 @@ input[type=text] {
 	word-wrap: break-word;
 }
 
-#button-add-submit {
+.modal-button {
 	margin: 0 auto;
     display: block;
 	padding: 10px 40px;
