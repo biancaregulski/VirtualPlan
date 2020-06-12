@@ -12,6 +12,7 @@ TODO:
 - make forward and backward button work
 - make squares draggable
 - add/delete events to calendar correctly
+- use holiday api
 */
 
 class Day {
@@ -110,6 +111,28 @@ document.getElementById("forward-arrow").onclick = function() {
     if (displayMonth % 3 == 2) {
       changeCalendarColor(seasonColors[getSeason()]);
     }
+}
+
+var modalAdd = document.getElementById("modal-add");
+
+document.getElementById("button-add-event").onclick = function() {
+	let currentColor = seasonColors[getSeason()];
+	document.getElementById("modal-title").style.color = currentColor;
+	document.getElementById("button-add-confirm").style.backgroundColor = currentColor;
+	document.getElementById("button-add-confirm").style.backgroundColor = currentColor;
+	document.getElementById("button-add-confirm").style.color = "white";
+	modalAdd.style.display = "block";
+}
+
+document.getElementsByClassName("close")[0].onclick = function() {
+	modalAdd.style.display = "none";
+}
+
+/* close modal by clicking outside of it */
+window.onclick = function(event) {
+	if (event.target == modalAdd) {
+		modalAdd.style.display = "none";
+	}
 }
 
 // TODO: if final days go beyond 5th row, combine with other day box
