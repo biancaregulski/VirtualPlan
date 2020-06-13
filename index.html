@@ -38,47 +38,48 @@ Released under the public domain
 					</div>
 					<div id="modal-add" class="modal">
 						<div class="modal-content">
-							<form action="/action_page.php" method="post" name="form1" id="form-add-event"> 
+							<form method="post" name="form1" id="form-add-event"> 
 								<span class="close">&times;</span>
 								<h2 id="new-event-title" class="modal-title">New Event</h2>
 								<input type="text" id="event-name-input" name="eventname" placeholder="Event name" required/>
 								<input type="text" id="location-name-input" name="locationname" placeholder="Location" required/>
-								<div class="row">
-									<input type="time" id="time-input-start" name="time-input" required/>
-									<input type="time" id="time-input-end" name="time-input" required/>
-									<div style="clear:both;"></div> 
-									<p id="to">to</p>
-								</div>
-								<div style="margin-top:10px" >
-									<label id="all-day">
-										<input type="checkbox" id="all-day-checkbox" name="checkboxallday"/>All day
-									</label>
+								<div id="event-add-input"></div>
+								<div id="event-time-input">
+									<div class="row">
+										<input type="time" id="time-input-start" name="time-input" required/>
+										<input type="time" id="time-input-end" name="time-input" required/>
+										<div style="clear:both;"></div> 
+										<p id="to">to</p>
+									</div>
+									<div style="margin-top:10px" >
+										<label id="all-day">
+											<input type="checkbox" id="all-day-checkbox" name="checkboxallday"/>All day
+										</label>
+									</div>
 								</div>
 								<input class="eventButton modal-button" id="button-add-submit" type="submit" value="Add">
 							</form>
 						</div>
 					</div>
 					<div id="modal-show" class="modal">
-						<div class="modal-content">
+						<div id="show-modal-content" class="modal-content">
 							<span class="close">&times;</span>
 							<h2 id="event-title" class="modal-title"></h2>
-							<div class="event-row">
-								<p class="event-label" id="location-label">Location:</p>
-								<p class="event-info" id="location-info"></p>
-							</div>
 							<div class="event-row">
 								<p class="event-label" id="date-label">Date:</p>
 								<p class="event-info" id="date-info"></p>
 							</div>
 							<div class="event-row">
-								<p class="event-label" id="start-label">Start:</p>
-								<p class="event-info" id="start-info"></p>
+								<p class="event-label" id="location-label" style="flex: 1;">Location:</p>
+								<div style="flex: 1;">
+									<input class="event-info" type="text" id="location-label-input" name="locationname" required/>
+								</div>
 							</div>
+							<div id="event-show-input"></div>
 							<div class="event-row">
-								<p class="event-label" id="end-label">End:</p>
-								<p class="event-info" id="end-info"></p>
+								<button class="eventButton modal-button" id="button-save">Save</button>
+								<button class="eventButton modal-button" id="button-delete">Delete</button>
 							</div>
-							<button class="eventButton modal-button" id="button-delete">Delete</button>
 						</div>
 					</div>
 			</div>

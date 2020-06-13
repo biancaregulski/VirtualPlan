@@ -290,12 +290,20 @@ input[type=text] {
 
 .modal-button {
 	margin: auto;
-    display: block;
-	padding: 10px 40px;
 	color: white;
 	margin-top: 20px;
 	margin-bottom: 10px;
 }
+
+#button-add-submit, #button-add-alert {
+	padding: 10px 40px;
+    display: block;
+}
+
+#button-save, #button-delete {
+	margin: 20px 0;
+}
+
 
 input[type=time] {
 	font-size: 16px;
@@ -304,6 +312,7 @@ input[type=time] {
 .event-row {
 	display: flex;
 	justify-content: space-between;
+    align-items: center;
 }
 
 .event-info {
