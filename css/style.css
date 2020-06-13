@@ -44,7 +44,7 @@ h1 {
 	color: white;
 	text-align: center;
 	font-size: 38px;
-	transition: color 2s;
+	transition: color 1s;
 }
 
 #line {
@@ -93,7 +93,7 @@ h1 {
 	color: white;
 	grid-template-columns: repeat(7, 1fr);
 	border-left: 1px solid var(--color-border);
-	transition: background-color 2s, color 2s;
+	transition: background-color 1s, color 1s;
 }
 
 #app-calendar {
@@ -145,7 +145,7 @@ h1 {
 	overflow: auto;
 }
 
-.eventButton, .submit-button {
+.eventButton{
 	cursor: pointer;
 	background-color: var(--color-button);
 	font-size: 14px;
@@ -155,7 +155,7 @@ h1 {
 	transition: background-color 300ms, color 300ms;
 }
 
-.eventButton:hover, .submit-button:hover {
+.eventButton:hover {
 	background-color: var(--color-button-hover);
 }
 
@@ -177,7 +177,7 @@ h1 {
 	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-#modal-title {
+.modal-title {
 	text-align: center;
 }
 
@@ -192,7 +192,7 @@ h1 {
 	background-color: #fefefe;
 	margin: auto;
 	display: block;
-	padding: 20px;
+	padding: 30px;
 	border: 1px solid #888;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 	width: 40vh;
@@ -262,8 +262,14 @@ input[type=text] {
 	align-items: center;
 }
 
+#time-input-start {
+	text-align: center;
+	padding-right: 10px;
+}
 
 #time-input-end {
+	text-align: center;
+	padding-left: 10px;
 	position: absolute;
 	right: 0;
 }
@@ -273,6 +279,7 @@ input[type=text] {
 	left: 0;
 	right: 0;
 	text-align: center;
+	padding: 0 10px;
 }
 
 #all-day {
@@ -282,13 +289,25 @@ input[type=text] {
 }
 
 .modal-button {
-	margin: 0 auto;
+	margin: auto;
     display: block;
 	padding: 10px 40px;
+	color: white;
+	margin-top: 20px;
+	margin-bottom: 10px;
 }
 
 input[type=time] {
 	font-size: 16px;
+}
+
+.event-row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.event-info {
+	display: inline;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
