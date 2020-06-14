@@ -5,17 +5,23 @@ Released under the public domain
 */
 
 :root {
-	/* colors for days of the week by season */
-	--color-banner-spring: #724E9E;
-	--color-banner-summer: #2aa188;
-	--color-banner-fall: #ED832F;
-	--color-banner-winter: #224CBE;
+	/* colors for days of the week & colored buttons by season */
+	--color-spring: #724E9E;
+	--color-summer: #2aa188;
+	--color-fall: #ED832F;
+	--color-winter: #224CBE;
 	
 	/* colors for event labels by season */
-	--color-event-spring: #f0defa;
-	--color-event-summer: #dbfff3;
-	--color-event-fall: #fcd8a2;
-	--color-event-winter: #cce1ff;
+	--color-spring-light: #f0defa;
+	--color-summer-light: #dbfff3;
+	--color-fall-light: #fcd8a2;
+	--color-winter-light: #cce1ff;
+
+	/* colors for colored button hover by season */
+	--color-spring-dark: #5c3d82;
+	--color-summer-dark: #17806a;
+	--color-fall-dark: #d66e1c;
+	--color-winter-dark: #1b3a8c;
 	
 	--color-border: lightgray;
 	--color-calendar-box: white;
@@ -167,7 +173,7 @@ h1 {
 	display: none;
 	position: fixed;
 	z-index: 1;
-	padding-top: 12vh;
+	/*padding-top: 12vh;*/
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -175,6 +181,7 @@ h1 {
 	overflow: auto;
 	background-color: rgb(0,0,0); /* Fallback color */
 	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	
 }
 
 .modal-title {
@@ -188,27 +195,38 @@ h1 {
 }
 
 .modal-content {
-	position: relative;
 	background-color: #fefefe;
 	margin: auto;
-	display: block;
 	padding: 30px;
 	border: 1px solid #888;
 	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-	width: 40vh;
+	max-width: 40vh;
 	overflow:hidden;
+	display: flex;
+    align-items: center;
+}
+
+.modal-alert {
+	width: 30vh;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.modal-elements {
+	display: block;
 }
 
 .close {
 	float:right;
 	clear: right;
 	color: #aaa;
+	margin-top: 0;
 	margin-bottom: 10px;
 	font-size: 28px;
 	font-weight: bold;
 }
 
-.modal-content, #caption {  
+.modal-content {  
 	-webkit-animation-name: fade;
 	-webkit-animation-duration: 0.6s;
 	animation-name: fade;
@@ -293,6 +311,7 @@ input[type=text] {
 	color: white;
 	margin-top: 20px;
 	margin-bottom: 10px;
+	
 }
 
 #button-add-submit, #button-add-alert {

@@ -6,6 +6,7 @@ Released under the public domain
 
 /*
 TODO:
+- don't select day when clicking its event
 - month/day shouldn't overlap buttons
 - make month start on the right date
 - make month match up to actual month
@@ -39,15 +40,20 @@ const titleHeaderDiv = document.querySelector("#title-header");
 var defaultBoxColor = getComputedStyle(document.body).getPropertyValue("--color-calendar-box");
 var selectedBoxColor = getComputedStyle(document.body).getPropertyValue("--color-calendar-box-selected");
 
-const seasonBannerColors = [getComputedStyle(document.body).getPropertyValue("--color-banner-spring"),
-							getComputedStyle(document.body).getPropertyValue("--color-banner-summer"),
-							getComputedStyle(document.body).getPropertyValue("--color-banner-fall"),
-							getComputedStyle(document.body).getPropertyValue("--color-banner-winter")];
+const seasonColors = [getComputedStyle(document.body).getPropertyValue("--color-spring"),
+							getComputedStyle(document.body).getPropertyValue("--color-summer"),
+							getComputedStyle(document.body).getPropertyValue("--color-fall"),
+							getComputedStyle(document.body).getPropertyValue("--color-winter")];
 
-const seasonEventColors = [getComputedStyle(document.body).getPropertyValue("--color-event-spring"),
-							getComputedStyle(document.body).getPropertyValue("--color-event-summer"),
-							getComputedStyle(document.body).getPropertyValue("--color-event-fall"),
-							getComputedStyle(document.body).getPropertyValue("--color-event-winter")];
+const seasonColorsLight = [getComputedStyle(document.body).getPropertyValue("--color-spring-light"),
+							getComputedStyle(document.body).getPropertyValue("--color-summer-light"),
+							getComputedStyle(document.body).getPropertyValue("--color-fall-light"),
+							getComputedStyle(document.body).getPropertyValue("--color-winter-light")];
+
+const seasonColorsDark = [getComputedStyle(document.body).getPropertyValue("--color-spring-dark"),
+							getComputedStyle(document.body).getPropertyValue("--color-summer-dark"),
+							getComputedStyle(document.body).getPropertyValue("--color-fall-dark"),
+							getComputedStyle(document.body).getPropertyValue("--color-winter-dark")];
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const months = [ "January", "February", "March", "April", "May", "June",
@@ -65,7 +71,7 @@ updateTodayVariables();
 var firstDay = new Date(todayYear, todayMonth, 1);
 updateFirstDayVariables();
 
-changeCalendarColor(seasonBannerColors[getSeason()]);
+changeCalendarColor(seasonColors[getSeason()]);
 
 displayDaysOfWeek();
 updateMonth();
@@ -114,7 +120,7 @@ document.getElementById("back-arrow").onclick = function() {
   updateMonth();
   // if going to a month where the season changes, change color to match season
   if (displayMonth % 3 == 1) {
-    changeCalendarColor(seasonBannerColors[getSeason()]);
+    changeCalendarColor(seasonColors[getSeason()]);
   }
 }
 
@@ -125,7 +131,7 @@ document.getElementById("forward-arrow").onclick = function() {
 	updateMonth();
 	// if going to a month where the season changes, change color to match season
 	if (displayMonth % 3 == 2) {
-	  changeCalendarColor(seasonBannerColors[getSeason()]);
+	  changeCalendarColor(seasonColors[getSeason()]);
 	}
 }
 
@@ -139,28 +145,43 @@ document.getElementById("button-register").onclick = function() {
 
 var modalAddAlert = document.getElementById("modal-add-alert");
 var modalAdd = document.getElementById("modal-add");
-var modalShowEvent = document.getElementById("modal-show");
+var modalShow = document.getElementById("modal-show");
+var modalSave = document.getElementById("modal-save");
+var modalDelete = document.getElementById("modal-delete");
 
-var addAlertButton = document.getElementById("button-add-alert");
+var addAlertButton = document.getElementById("button-add-ok");
 var submitAddButton = document.getElementById("button-add-submit");
 var deleteButton = document.getElementById("button-delete");
 var saveButton = document.getElementById("button-save");
+var cancelButton = document.getElementById("button-cancel");
+var okButton = document.getElementById("button-ok");
+
+		
+function changeButtonHover(elem) {
+	let buttonColorHover = seasonColorsDark[getSeason()];
+	elem.style.backgroundColor = buttonColorHover;
+}
+
+function revertButtonColor(elem) {
+	let buttonColor = seasonColors[getSeason()];
+	elem.style.backgroundColor = buttonColor;
+}
 
 document.getElementById("button-add-event").onclick = function() {
-	let currentColor = seasonBannerColors[getSeason()];
+	let buttonColor = seasonColors[getSeason()];
 	document.getElementById("event-add-input").appendChild(document.getElementById("event-time-input"));
 	if (getSelectedDays().length == 0) {
 		// no selected dates -- show alert message
-		addAlertButton.style.backgroundColor = currentColor;
-		//document.getElementById("event-show-input").appendChild(document.getElementById("event-time-input"));
-		modalAddAlert.style.display = "block";
+		addAlertButton.style.backgroundColor = buttonColor;
+
+		modalAddAlert.style.display = "flex";
 	} 
 	else {
 		// display add event modal
 		allDayCheckBox.checked = false;			// unchecked by default
-		document.getElementById("new-event-title").style.color = currentColor;
-		submitAddButton.style.backgroundColor = currentColor;
-		modalAdd.style.display = "block";
+		document.getElementById("new-event-title").style.color = buttonColor;
+		submitAddButton.style.backgroundColor = buttonColor;
+		modalAdd.style.display = "flex";
 	}
 }
 
@@ -237,7 +258,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 		// display event with event name and starting hour/minute
 		let labelArray = [eventName.value, " @ ", timeString];
 		eventDiv.innerHTML = labelArray.join("");
-		eventDiv.style.backgroundColor = seasonEventColors[getSeason()];
+		eventDiv.style.backgroundColor = seasonColorsLight[getSeason()];
 		
 		// create event object and add to each day's list of objects
 		let dayEvent = new Event(eventName.value, locationName.value, 
@@ -248,7 +269,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 		eventDiv.onclick = function() {
 			// show event information from clicking on labelArray
 			let dateArray = [dayEvent.start.getMonth() + 1, dayEvent.start.getDate(), dayEvent.start.getFullYear()];
-			let currentColor = seasonBannerColors[getSeason()];
+			let currentColor = seasonColors[getSeason()];
 			let eventTitle = document.getElementById("event-title");
 			
 			eventTitle.style.color = currentColor;
@@ -268,13 +289,24 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 			
 			deleteButton.style.backgroundColor = currentColor;
 			saveButton.style.backgroundColor = currentColor;
-			modalShowEvent.style.display = "block";
+			modalShow.style.display = "flex";
 			
+			cancelButton.style.backgroundColor = currentColor;
+			okButton.style.backgroundColor = currentColor;
+			
+			saveButton.onclick = function() {
+				deleteButton.style.backgroundColor = currentColor;
+				days[selectedDays[i]].events.splice(index, 1);		// remove from array
+				eventDiv.remove();
+				modalSave.style.display = "flex";
+				document.getElementById("save-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
+			}
 			
 			deleteButton.onclick = function() {
 				days[selectedDays[i]].events.splice(index, 1);		// remove from array
 				eventDiv.remove();
-				modalShowEvent.style.display = "none";
+				modalDelete.style.display = "flex";
+				document.getElementById("delete-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
 			}
 		};
 		dayDiv.appendChild(eventDiv);
@@ -315,7 +347,7 @@ function updateMonth() {
 		dayNumDiv.className = "day-number";
 		if (todayMonth == displayMonth && todayDate == i) {
 			// underline and change color for today's number
-			dayNumDiv.style.color = seasonBannerColors[getSeason()];
+			dayNumDiv.style.color = seasonColors[getSeason()];
 			dayNumDiv.style.fontWeight = "bold";
 			dayNumDiv.style.textDecoration = "underline";
 		}

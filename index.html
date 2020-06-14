@@ -17,7 +17,6 @@ Released under the public domain
 			<div id="header">
 				<div class="header-left">
 					<button class="eventButton" id="button-add-event" type="button">Add Event</button>
-					<!--<button class="eventButton" id="button-delete-event" type="button" onclick="">Delete Event</button>-->
 				</div>
 				<div class="header-center">
 					<button class= "arrowButton" id=back-arrow>◄</button>
@@ -29,15 +28,18 @@ Released under the public domain
 					<button class="eventButton" id="button-register">Register</button>
 
 				</div>
-					<div id="modal-add-alert" class="modal">
-						<div class="modal-content">
+				<div id="modal-add-alert" class="modal">
+					<div class="modal-content">
+						<div class="modal-elements">
 							<span class="close">&times;</span>
 							<p class="alert-text">Select one or more days to add an event.</p>
-							<button class="eventButton modal-button" id="button-add-alert">OK</button>
+							<button class="eventButton modal-button" id="button-add-ok" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
 						</div>
 					</div>
-					<div id="modal-add" class="modal">
-						<div class="modal-content">
+				</div>
+				<div id="modal-add" class="modal">
+					<div id="modal-add-content" class="modal-content">
+						<div class="modal-elements">
 							<form method="post" name="form1" id="form-add-event"> 
 								<span class="close">&times;</span>
 								<h2 id="new-event-title" class="modal-title">New Event</h2>
@@ -57,12 +59,14 @@ Released under the public domain
 										</label>
 									</div>
 								</div>
-								<input class="eventButton modal-button" id="button-add-submit" type="submit" value="Add">
+								<input class="eventButton modal-button" id="button-add-submit" type="submit"  onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)" value="Add">
 							</form>
 						</div>
 					</div>
-					<div id="modal-show" class="modal">
-						<div id="show-modal-content" class="modal-content">
+				</div>
+				<div id="modal-show" class="modal">
+					<div id="modal-show-content" class="modal-content">
+						<div class="modal-elements">
 							<span class="close">&times;</span>
 							<h2 id="event-title" class="modal-title"></h2>
 							<div class="event-row">
@@ -77,11 +81,36 @@ Released under the public domain
 							</div>
 							<div id="event-show-input"></div>
 							<div class="event-row">
-								<button class="eventButton modal-button" id="button-save">Save</button>
-								<button class="eventButton modal-button" id="button-delete">Delete</button>
+								<button class="eventButton modal-button" id="button-save" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">Save</button>
+								<button class="eventButton modal-button" id="button-delete" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">Delete</button>
 							</div>
 						</div>
 					</div>
+				</div>
+				
+				<div id="modal-save" class="modal">
+					<div id="modal-save-content" class="modal-content modal-alert">
+						<div class="modal-elements">
+							<span class="close">&times;</span>
+							<p class="alert-text">Are you sure you would like to overwrite this event?</p>
+							<div id="save-buttons"></div>
+							<div id="buttons-cancel-ok" class="event-row">
+								<button class="eventButton modal-button" id="button-cancel" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">Cancel</button>
+								<button class="eventButton modal-button" id="button-ok" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div id="modal-delete" class="modal">
+					<div id="modal-delete-content" class="modal-content modal-alert">
+						<div class="modal-elements">
+							<span class="close">&times;</span>
+							<p class="alert-text">Are you sure you would like to delete this event?</p>
+							<div id="delete-buttons"></div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="disable-select" id="day-of-week"></div>
 			<div class="disable-select" id="app-calendar"></div>
