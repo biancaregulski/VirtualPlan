@@ -264,28 +264,31 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 		let dayEvent = new Event(eventName.value, locationName.value, 
 			new Date(displayYear, displayMonth, selectedDays[i], startTime.getHours(), startTime.getMinutes()), 
 			new Date(displayYear, displayMonth, selectedDays[i], endTime.getHours(), endTime.getMinutes()));
-		let index = days[selectedDays[i]].events.push(dayEvent);
+		let index = days[selectedDays[i]].events.push(dayEvent) - 1;			// get index of newly added event
 		
 		eventDiv.onclick = function() {
 			// show event information from clicking on labelArray
 			let dateArray = [dayEvent.start.getMonth() + 1, dayEvent.start.getDate(), dayEvent.start.getFullYear()];
-			let currentColor = seasonColors[getSeason()];
-			let eventTitle = document.getElementById("event-title");
-			
-			eventTitle.style.color = currentColor;
+			let currentColor = seasonColors[getSeason()];			
 			
 			let startString = dayEvent.start.getHours().toString().padStart(2, '0') + ':' + 
 			dayEvent.start.getMinutes().toString().padStart(2, '0');
 			let endString = dayEvent.end.getHours().toString().padStart(2, '0') + ':' + 
 			dayEvent.end.getMinutes().toString().padStart(2, '0');
 			
-			
 			document.getElementById("event-show-input").appendChild(document.getElementById("event-time-input"));
-			document.getElementById("location-label-input").value = dayEvent.loc;
-			eventTitle.innerHTML = dayEvent.name;
+			
 			document.getElementById("date-info").innerHTML = dateArray.join("-");
-			document.getElementById("time-input-start").value = startString;
-			document.getElementById("time-input-end").value = endString;
+			
+			let locationInput = document.getElementById("location-label-input");
+			let nameInput = document.getElementById("name-label-input");
+			let startInput = document.getElementById("time-input-start");
+			let endInput = document.getElementById("time-input-end");
+
+			nameInput.value = dayEvent.name;
+			locationInput.value = dayEvent.loc;
+			startInput.value = startString;
+			endInput.value = endString;
 			
 			deleteButton.style.backgroundColor = currentColor;
 			saveButton.style.backgroundColor = currentColor;
@@ -294,27 +297,80 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 			cancelButton.style.backgroundColor = currentColor;
 			okButton.style.backgroundColor = currentColor;
 			
-			saveButton.onclick = function() {
-				deleteButton.style.backgroundColor = currentColor;
-				days[selectedDays[i]].events.splice(index, 1);		// remove from array
-				eventDiv.remove();
+			// prevent clicking on event to affect selection of day box underneath
+			if (!e) var e = window.event;
+			e.cancelBubble = true;
+			if (e.stopPropagation) e.stopPropagation();
+
+			
+			document.getElementById("form-save-event").addEventListener("submit", function() {
+				event.preventDefault();			// prevents page from reloading
+				
+				// display save alert message
 				modalSave.style.display = "flex";
 				document.getElementById("save-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
-			}
+				
+				cancelButton.onclick = function() {
+					modalSave.style.display = "none";
+				}
+				
+				okButton.onclick = function() {
+					// update values in days array
+					days[selectedDays[i]].events[index].name = nameInput.value;
+					days[selectedDays[i]].events[index].loc = locationInput.value;
+
+					if (allDayCheckBox.checked) {
+						days[selectedDays[i]].events[index].start.setHours(0);					
+						days[selectedDays[i]].events[index].start.setMinutes(0);
+						days[selectedDays[i]].events[index].end.setHours(23);
+						days[selectedDays[i]].events[index].end.setMinutes(59);
+						
+						timeString = "all day";
+					}
+					else {
+						days[selectedDays[i]].events[index].start.setHours(startInput.valueAsDate.getHours());					
+						days[selectedDays[i]].events[index].start.setMinutes(startInput.valueAsDate.getMinutes());
+						days[selectedDays[i]].events[index].end.setHours(endInput.valueAsDate.getHours());
+						days[selectedDays[i]].events[index].end.setMinutes(endInput.valueAsDate.getMinutes());
+						
+						timeString = days[selectedDays[i]].events[index].start.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+					}
+					
+					// update values on visible calendar event
+					labelArray = [days[selectedDays[i]].events[index].name, " @ ", timeString];
+					eventDiv.innerHTML = labelArray.join("");
+					
+					modalSave.style.display = "none";
+				}
+				
+			});
 			
 			deleteButton.onclick = function() {
-				days[selectedDays[i]].events.splice(index, 1);		// remove from array
-				eventDiv.remove();
+				event.preventDefault();			// prevents page from reloading
+				
+				// display delete alert message
 				modalDelete.style.display = "flex";
 				document.getElementById("delete-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
+				
+				cancelButton.onclick = function() {
+					modalDelete.style.display = "none";
+				}
+				
+				okButton.onclick = function() {
+					days[selectedDays[i]].events.splice(index, 1);		// remove from array
+					eventDiv.remove();									// remove from calendar
+					modalDelete.style.display = "none";
+					modalShow.style.display = "none";
+				}
 			}
-		};
+			
+				
+		}
 		dayDiv.appendChild(eventDiv);
 		closeModal();
 		
 	}
 });
-
 
 
 function getSelectedDays() {

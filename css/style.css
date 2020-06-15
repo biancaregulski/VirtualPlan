@@ -151,7 +151,7 @@ h1 {
 	overflow: auto;
 }
 
-.eventButton{
+.event-button{
 	cursor: pointer;
 	background-color: var(--color-button);
 	font-size: 14px;
@@ -161,7 +161,7 @@ h1 {
 	transition: background-color 300ms, color 300ms;
 }
 
-.eventButton:hover {
+.event-button:hover {
 	background-color: var(--color-button-hover);
 }
 
@@ -314,7 +314,7 @@ input[type=text] {
 	
 }
 
-#button-add-submit, #button-add-alert {
+#button-add-submit, #button-add-ok {
 	padding: 10px 40px;
     display: block;
 }
