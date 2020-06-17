@@ -6,15 +6,10 @@ Released under the public domain
 
 /*
 TODO:
-- don't select day when clicking its event
 - month/day shouldn't overlap buttons
-- make month start on the right date
-- make month match up to actual month
-- make forward and backward button work
-- make squares draggable
 - fix time zone
-- add/delete events to calendar correctly
 - use holiday api
+- fade out from modals
 */
 
 class Day {
@@ -149,6 +144,8 @@ var modalShow = document.getElementById("modal-show");
 var modalSave = document.getElementById("modal-save");
 var modalDelete = document.getElementById("modal-delete");
 
+var modalArray = [modalAddAlert, modalAdd, modalShow, modalSave, modalDelete];
+
 var addAlertButton = document.getElementById("button-add-ok");
 var submitAddButton = document.getElementById("button-add-submit");
 var deleteButton = document.getElementById("button-delete");
@@ -189,22 +186,19 @@ addAlertButton.onclick = function() {
 	modalAddAlert.style.display = "none";
 }
 
-document.getElementsByClassName("close")[0].onclick = function() {
-	closeModal();
-}
+// close modal when its close button is clicked
+var closeElements = document.getElementsByClassName("close");
+for (let i = 0; i < modalArray.length; i++) {
+    closeElements[i].onclick = function(){
+		modalArray[i].style.display = "none";
+    }
+};
 
 // close modal by clicking outside of it
 window.onclick = function(event) {
 	if (event.target.className == "modal") {
 		event.target.style.display = "none";
 	}
-}
-
-// TODO: fix this
-function closeModal() {
-	modalAdd.style.display = "none";
-	modalAddAlert.style.display = "none";
-	
 }
 
 const eventName = document.getElementById("event-name-input");
@@ -223,12 +217,15 @@ allDayCheckBox.addEventListener('change', (event) => {
 		startTimeInput.disabled = false;
 		endTimeInput.disabled = false;
 	}
+	
 });
 
 document.getElementById("form-add-event").addEventListener("submit", function() {
 	// TODO: check that start time is before end time
 	event.preventDefault();			// prevents page from reloading
 	// add event to array of selected days
+	
+	
 	let selectedDays = getSelectedDays();	
 	let startTime = new Date();					// make this for selectedDays[0]
 	let endTime = new Date();
@@ -249,6 +246,9 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 		endTime.setMinutes(endTimeInput.valueAsDate.getMinutes());
 		timeString = startTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 	}
+	
+	deselectAllDays();
+	
 	for (let i = 0; i < selectedDays.length; i++) {
 		let dayDiv = document.getElementById("day-".concat(selectedDays[i].toString()));
 		
@@ -367,9 +367,9 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 				
 		}
 		dayDiv.appendChild(eventDiv);
-		closeModal();
 		
 	}
+	modalAdd.style.display = "none";
 });
 
 
@@ -384,7 +384,6 @@ function getSelectedDays() {
 }
 
 function updateMonth() {
-	
 	document.getElementById("month-year").innerText = months[displayMonth].concat(' ', displayYear);
 	let firstDateStarted = false;
 	let column = 0;
@@ -440,5 +439,14 @@ function updateMonth() {
 			calendarDiv.appendChild(dayDiv);
 			column++;
 		}
+	}
+}
+
+function deselectAllDays() {
+	var dayElements = document.getElementsByClassName("day");
+	for (var i = 1; i < dayElements.length; i++) {
+		let index = parseInt(dayElements.item(i).dataset.num) - 1;
+		days[index].selected = false;
+		dayElements.item(i).style.backgroundColor = defaultBoxColor;
 	}
 }

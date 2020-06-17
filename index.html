@@ -17,7 +17,6 @@ Released under the public domain
 			<div id="header">
 				<div class="header-left">
 					<button class="event-button" id="button-add-event" type="button">Add Event</button>
-					<!-- add deselect events button -->
 				</div>
 				<div class="header-center">
 					<button class= "arrowButton" id=back-arrow>◄</button>
@@ -42,7 +41,7 @@ Released under the public domain
 					<div id="modal-add-content" class="modal-content">
 						<div class="modal-elements">
 							<form method="post" name="form1" id="form-add-event"> 
-								<span class="close">&times;</span>
+								<span class="close" data-modal="modal-add-content">&times;</span>
 								<h2 id="new-event-title" class="modal-title">New Event</h2>
 								<input type="text" id="event-name-input" name="eventname" placeholder="Event name" required/>
 								<input type="text" id="location-name-input" name="locationname" placeholder="Location" required/>
@@ -69,7 +68,7 @@ Released under the public domain
 					<div id="modal-show-content" class="modal-content">
 						<div class="modal-elements">
 							<form method="post" name="form1" id="form-save-event"> 
-								<span class="close" >&times;</span>
+								<span class="close" data-modal="modal-show-content">&times;</span>
 								<div class="event-row">
 									<p class="event-label" id="date-label" style="flex: 1;">Date:</p>
 									<div style="flex: 1;">
@@ -101,7 +100,7 @@ Released under the public domain
 				<div id="modal-save" class="modal">
 					<div id="modal-save-content" class="modal-content modal-alert">
 						<div class="modal-elements">
-							<span class="close">&times;</span>
+							<span class="close" data-modal="modal-save-content">&times;</span>
 							<p class="alert-text">Are you sure you would like to overwrite this event?</p>
 							<div id="save-buttons"></div>
 							<div id="buttons-cancel-ok" class="event-row">
