@@ -175,6 +175,8 @@ document.getElementById("button-add-event").onclick = function() {
 	} 
 	else {
 		// display add event modal
+		startTimeInput.disabled = false;
+		endTimeInput.disabled = false;
 		allDayCheckBox.checked = false;			// unchecked by default
 		document.getElementById("new-event-title").style.color = buttonColor;
 		submitAddButton.style.backgroundColor = buttonColor;
@@ -225,17 +227,19 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 	event.preventDefault();			// prevents page from reloading
 	// add event to array of selected days
 	
-	
 	let selectedDays = getSelectedDays();	
 	let startTime = new Date();					// make this for selectedDays[0]
 	let endTime = new Date();
 	let timeString;
-	if (allDayCheckBox.checked) {
+	
+	if (allDayCheckBox.checked || (startTimeInput.valueAsDate.getHours() == 0 && startTimeInput.valueAsDate.getMinutes() == 0 
+		&& endTimeInput.valueAsDate.getHours() == 23 && endTimeInput.valueAsDate.getMinutes() == 59)) {
 		// all day: start at midnight, end at 23:59
 		startTime.setHours(0);					
 		startTime.setMinutes(0);
 		endTime.setHours(23);
 		endTime.setMinutes(59);
+		startTimeInput.value = "";
 		timeString = "all day";
 	}
 	else {
@@ -250,7 +254,6 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 	deselectAllDays();
 	
 	for (let i = 0; i < selectedDays.length; i++) {
-		alert(selectedDays[i]);
 		let dayDiv = document.getElementById("day-".concat(selectedDays[i].toString()));
 		
 		let eventDiv = document.createElement("div");
@@ -319,8 +322,9 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 					// update values in days array
 					days[selectedDays[i] - 1].events[index].name = nameInput.value;
 					days[selectedDays[i] - 1].events[index].loc = locationInput.value;
-
-					if (allDayCheckBox.checked) {
+					
+					if (allDayCheckBox.checked || (startInput.valueAsDate.getHours() == 0 && startInput.valueAsDate.getMinutes() == 0 
+						&& endInput.valueAsDate.getHours() == 23 && endInput.valueAsDate.getMinutes() == 59)) {
 						days[selectedDays[i] - 1].events[index].start.setHours(0);					
 						days[selectedDays[i] - 1].events[index].start.setMinutes(0);
 						days[selectedDays[i] - 1].events[index].end.setHours(23);
@@ -342,6 +346,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 					eventDiv.innerHTML = labelArray.join("");
 					
 					modalSave.style.display = "none";
+					modalShow.style.display = "none";
 				}
 				
 			});
@@ -360,6 +365,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 				okButton.onclick = function() {
 					days[selectedDays[i] - 1].events.splice(index, 1);		// remove from array
 					eventDiv.remove();									// remove from calendar
+					
 					modalDelete.style.display = "none";
 					modalShow.style.display = "none";
 				}
@@ -443,15 +449,12 @@ function updateMonth() {
 			column++;
 		}
 	}
-	//alert(days.length);
 }
 
 function deselectAllDays() {
 	var dayElements = document.getElementsByClassName("day");
-	alert(dayElements.length);
 	for (var i = 0; i < dayElements.length; i++) {
 		if (dayElements.item(i).hasAttribute("id")) {
-			//alert(dayElements.item(i).dataset.num);
 			let index = parseInt(dayElements.item(i).dataset.num) - 1;
 			days[index].selected = false;
 			dayElements.item(i).style.backgroundColor = defaultBoxColor;
