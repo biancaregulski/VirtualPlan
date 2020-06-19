@@ -250,6 +250,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 	deselectAllDays();
 	
 	for (let i = 0; i < selectedDays.length; i++) {
+		alert(selectedDays[i]);
 		let dayDiv = document.getElementById("day-".concat(selectedDays[i].toString()));
 		
 		let eventDiv = document.createElement("div");
@@ -264,7 +265,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 		let dayEvent = new Event(eventName.value, locationName.value, 
 			new Date(displayYear, displayMonth, selectedDays[i], startTime.getHours(), startTime.getMinutes()), 
 			new Date(displayYear, displayMonth, selectedDays[i], endTime.getHours(), endTime.getMinutes()));
-		let index = days[selectedDays[i]].events.push(dayEvent) - 1;			// get index of newly added event
+		let index = days[selectedDays[i] - 1].events.push(dayEvent) - 1;			// get index of newly added event
 		
 		eventDiv.onclick = function() {
 			// show event information from clicking on labelArray
@@ -316,28 +317,28 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 				
 				okButton.onclick = function() {
 					// update values in days array
-					days[selectedDays[i]].events[index].name = nameInput.value;
-					days[selectedDays[i]].events[index].loc = locationInput.value;
+					days[selectedDays[i] - 1].events[index].name = nameInput.value;
+					days[selectedDays[i] - 1].events[index].loc = locationInput.value;
 
 					if (allDayCheckBox.checked) {
-						days[selectedDays[i]].events[index].start.setHours(0);					
-						days[selectedDays[i]].events[index].start.setMinutes(0);
-						days[selectedDays[i]].events[index].end.setHours(23);
-						days[selectedDays[i]].events[index].end.setMinutes(59);
+						days[selectedDays[i] - 1].events[index].start.setHours(0);					
+						days[selectedDays[i] - 1].events[index].start.setMinutes(0);
+						days[selectedDays[i] - 1].events[index].end.setHours(23);
+						days[selectedDays[i] - 1].events[index].end.setMinutes(59);
 						
 						timeString = "all day";
 					}
 					else {
-						days[selectedDays[i]].events[index].start.setHours(startInput.valueAsDate.getHours());					
-						days[selectedDays[i]].events[index].start.setMinutes(startInput.valueAsDate.getMinutes());
-						days[selectedDays[i]].events[index].end.setHours(endInput.valueAsDate.getHours());
-						days[selectedDays[i]].events[index].end.setMinutes(endInput.valueAsDate.getMinutes());
+						days[selectedDays[i] - 1].events[index].start.setHours(startInput.valueAsDate.getHours());					
+						days[selectedDays[i] - 1].events[index].start.setMinutes(startInput.valueAsDate.getMinutes());
+						days[selectedDays[i] - 1].events[index].end.setHours(endInput.valueAsDate.getHours());
+						days[selectedDays[i] - 1].events[index].end.setMinutes(endInput.valueAsDate.getMinutes());
 						
-						timeString = days[selectedDays[i]].events[index].start.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+						timeString = days[selectedDays[i] - 1].events[index].start.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 					}
 					
 					// update values on visible calendar event
-					labelArray = [days[selectedDays[i]].events[index].name, " @ ", timeString];
+					labelArray = [days[selectedDays[i] - 1].events[index].name, " @ ", timeString];
 					eventDiv.innerHTML = labelArray.join("");
 					
 					modalSave.style.display = "none";
@@ -357,7 +358,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 				}
 				
 				okButton.onclick = function() {
-					days[selectedDays[i]].events.splice(index, 1);		// remove from array
+					days[selectedDays[i] - 1].events.splice(index, 1);		// remove from array
 					eventDiv.remove();									// remove from calendar
 					modalDelete.style.display = "none";
 					modalShow.style.display = "none";
@@ -385,53 +386,55 @@ function getSelectedDays() {
 
 function updateMonth() {
 	document.getElementById("month-year").innerText = months[displayMonth].concat(' ', displayYear);
-	let firstDateStarted = false;
-	let column = 0;
-	let i = 0;
 
 	// if changing months, remove previous day boxes
-	document.querySelectorAll('.day').forEach(function(prevDay){
-	prevDay.remove()
-	})
-
+	document.querySelectorAll('.day').forEach(function(prevDay) {
+		prevDay.remove()
+	});
+	
+	days = [];
+	
+	let firstDateStarted = false;
+	let column = 0;
 	let dayDiv, dayNumDiv;
+	let i = 0;
 	while (i < numDays) {
-	if (column % 7 == firstDayOfWeek) {
-		i++;
-		let dayNumDiv =  document.createElement("p");
-		dayNumDiv.className = "day-number";
-		if (todayMonth == displayMonth && todayDate == i) {
-			// underline and change color for today's number
-			dayNumDiv.style.color = seasonColors[getSeason()];
-			dayNumDiv.style.fontWeight = "bold";
-			dayNumDiv.style.textDecoration = "underline";
-		}
-		dayNumDiv.appendChild(document.createTextNode(i));
-
-		dayDiv = document.createElement("div");
-		dayDiv.className = "day";
-		dayDiv.id = "day-".concat(i.toString());
-		dayDiv.dataset.num = i;
-		dayDiv.appendChild(dayNumDiv);
-
-		// create Day object
-		let newDay = new Day();
-		days.push(newDay);
-
-		// when box is clicked, check if box is selected
-		dayDiv.onclick = function() {
-			let index = parseInt(this.dataset.num) - 1;
-			if (days[index].selected == true) {
-			  days[index].selected = false;
-			  this.style.backgroundColor = defaultBoxColor;
+		if (column % 7 == firstDayOfWeek) {
+			i++;
+			let dayNumDiv =  document.createElement("p");
+			dayNumDiv.className = "day-number";
+			if (todayMonth == displayMonth && todayDate == i) {
+				// underline and change color for today's number
+				dayNumDiv.style.color = seasonColors[getSeason()];
+				dayNumDiv.style.fontWeight = "bold";
+				dayNumDiv.style.textDecoration = "underline";
 			}
-			else {
-			  days[index].selected = true;
-			  this.style.backgroundColor = selectedBoxColor;
-			}
-		};
-		calendarDiv.appendChild(dayDiv);
-		firstDateStarted = true;
+			dayNumDiv.appendChild(document.createTextNode(i));
+
+			dayDiv = document.createElement("div");
+			dayDiv.className = "day";
+			dayDiv.id = "day-".concat(i.toString());
+			dayDiv.dataset.num = i;
+			dayDiv.appendChild(dayNumDiv);
+
+			// create Day object
+			let newDay = new Day();
+			days.push(newDay);
+
+			// when box is clicked, check if box is selected
+			dayDiv.onclick = function() {
+				let index = parseInt(this.dataset.num) - 1;
+				if (days[index].selected == true) {
+				  days[index].selected = false;
+				  this.style.backgroundColor = defaultBoxColor;
+				}
+				else {
+				  days[index].selected = true;
+				  this.style.backgroundColor = selectedBoxColor;
+				}
+			};
+			calendarDiv.appendChild(dayDiv);
+			firstDateStarted = true;
 		}
 		else {
 			dayDiv = document.createElement("div");
@@ -440,13 +443,18 @@ function updateMonth() {
 			column++;
 		}
 	}
+	//alert(days.length);
 }
 
 function deselectAllDays() {
 	var dayElements = document.getElementsByClassName("day");
-	for (var i = 1; i < dayElements.length; i++) {
-		let index = parseInt(dayElements.item(i).dataset.num) - 1;
-		days[index].selected = false;
-		dayElements.item(i).style.backgroundColor = defaultBoxColor;
+	alert(dayElements.length);
+	for (var i = 0; i < dayElements.length; i++) {
+		if (dayElements.item(i).hasAttribute("id")) {
+			//alert(dayElements.item(i).dataset.num);
+			let index = parseInt(dayElements.item(i).dataset.num) - 1;
+			days[index].selected = false;
+			dayElements.item(i).style.backgroundColor = defaultBoxColor;
+		}
 	}
 }
