@@ -60,6 +60,7 @@ var todayDate, todayMonth, todayYear, numDays, firstDayOfWeek;
 var displayMonth, displayYear;
 
 var today = new Date();
+var tzHourOffset = Math.round(today.getTimezoneOffset() / 60) + 1;		// adjust for time zone
 updateTodayVariables();
 
 // start first day as day 1 of current month.year
@@ -244,9 +245,9 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 	}
 	else {
 		// get hours and minutes from time selector
-		startTime.setHours(startTimeInput.valueAsDate.getHours());
+		startTime.setHours(startTimeInput.valueAsDate.getHours() + tzHourOffset);
 		startTime.setMinutes(startTimeInput.valueAsDate.getMinutes());
-		endTime.setHours(endTimeInput.valueAsDate.getHours());
+		endTime.setHours(endTimeInput.valueAsDate.getHours() + tzHourOffset);
 		endTime.setMinutes(endTimeInput.valueAsDate.getMinutes());
 		timeString = startTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 	}
