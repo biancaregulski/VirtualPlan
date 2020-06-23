@@ -7,7 +7,6 @@ Released under the public domain
 /*
 TODO:
 - month/day shouldn't overlap buttons
-- fix time zone
 - use holiday api
 - fade out from modals
 */
@@ -233,24 +232,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 	let endTime = new Date();
 	let timeString;
 	
-	if (allDayCheckBox.checked || (startTimeInput.valueAsDate.getHours() == 0 && startTimeInput.valueAsDate.getMinutes() == 0 
-		&& endTimeInput.valueAsDate.getHours() == 23 && endTimeInput.valueAsDate.getMinutes() == 59)) {
-		// all day: start at midnight, end at 23:59
-		startTime.setHours(0);					
-		startTime.setMinutes(0);
-		endTime.setHours(23);
-		endTime.setMinutes(59);
-		startTimeInput.value = "";
-		timeString = "all day";
-	}
-	else {
-		// get hours and minutes from time selector
-		startTime.setHours(startTimeInput.valueAsDate.getHours() + tzHourOffset);
-		startTime.setMinutes(startTimeInput.valueAsDate.getMinutes());
-		endTime.setHours(endTimeInput.valueAsDate.getHours() + tzHourOffset);
-		endTime.setMinutes(endTimeInput.valueAsDate.getMinutes());
-		timeString = startTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
-	}
+	timeString = generateEventLabel(startTime, endTime);
 	
 	deselectAllDays();
 	
@@ -269,7 +251,11 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 		let dayEvent = new Event(eventName.value, locationName.value, 
 			new Date(displayYear, displayMonth, selectedDays[i], startTime.getHours(), startTime.getMinutes()), 
 			new Date(displayYear, displayMonth, selectedDays[i], endTime.getHours(), endTime.getMinutes()));
-		let index = days[selectedDays[i] - 1].events.push(dayEvent) - 1;			// get index of newly added event
+			
+		let dayIndex = selectedDays[i] - 1;
+		let selectedDay = days[dayIndex];
+		let eventIndex = selectedDay.events.push(dayEvent) - 1;			// get index of newly added event
+		let selectedEvent = selectedDay.events[eventIndex];
 		
 		eventDiv.onclick = function() {
 			// show event information from clicking on labelArray
@@ -287,13 +273,11 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 			
 			let locationInput = document.getElementById("location-label-input");
 			let nameInput = document.getElementById("name-label-input");
-			let startInput = document.getElementById("time-input-start");
-			let endInput = document.getElementById("time-input-end");
 
 			nameInput.value = dayEvent.name;
 			locationInput.value = dayEvent.loc;
-			startInput.value = startString;
-			endInput.value = endString;
+			startTimeInput.value = startString;
+			endTimeInput.value = endString;
 			
 			deleteButton.style.backgroundColor = currentColor;
 			saveButton.style.backgroundColor = currentColor;
@@ -320,30 +304,15 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 				}
 				
 				okButton.onclick = function() {
+					//eventDiv.innerHTML = labelArray.join("");
 					// update values in days array
-					days[selectedDays[i] - 1].events[index].name = nameInput.value;
-					days[selectedDays[i] - 1].events[index].loc = locationInput.value;
+					selectedEvent.name = nameInput.value;
+					selectedEvent.loc = locationInput.value;
 					
-					if (allDayCheckBox.checked || (startInput.valueAsDate.getHours() == 0 && startInput.valueAsDate.getMinutes() == 0 
-						&& endInput.valueAsDate.getHours() == 23 && endInput.valueAsDate.getMinutes() == 59)) {
-						days[selectedDays[i] - 1].events[index].start.setHours(0);					
-						days[selectedDays[i] - 1].events[index].start.setMinutes(0);
-						days[selectedDays[i] - 1].events[index].end.setHours(23);
-						days[selectedDays[i] - 1].events[index].end.setMinutes(59);
-						
-						timeString = "all day";
-					}
-					else {
-						days[selectedDays[i] - 1].events[index].start.setHours(startInput.valueAsDate.getHours());					
-						days[selectedDays[i] - 1].events[index].start.setMinutes(startInput.valueAsDate.getMinutes());
-						days[selectedDays[i] - 1].events[index].end.setHours(endInput.valueAsDate.getHours());
-						days[selectedDays[i] - 1].events[index].end.setMinutes(endInput.valueAsDate.getMinutes());
-						
-						timeString = days[selectedDays[i] - 1].events[index].start.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
-					}
+					timeString = generateEventLabel(selectedEvent.start, selectedEvent.end);
 					
 					// update values on visible calendar event
-					labelArray = [days[selectedDays[i] - 1].events[index].name, " @ ", timeString];
+					let labelArray = [selectedEvent.name, " @ ", timeString];					
 					eventDiv.innerHTML = labelArray.join("");
 					
 					modalSave.style.display = "none";
@@ -371,15 +340,35 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 					modalShow.style.display = "none";
 				}
 			}
-			
-				
 		}
 		dayDiv.appendChild(eventDiv);
 		
 	}
 	modalAdd.style.display = "none";
-});
+});	
 
+function generateEventLabel(start, end) {
+	if (allDayCheckBox.checked || ((startTimeInput.valueAsDate.getHours() + tzHourOffset == 0 || 
+		startTimeInput.valueAsDate.getHours() + tzHourOffset == 24) && startTimeInput.valueAsDate.getMinutes() == 0 
+		&& endTimeInput.valueAsDate.getHours() + tzHourOffset == 23 && endTimeInput.valueAsDate.getMinutes() == 59)) {
+		// all day: start at midnight, end at 23:59
+		start.setHours(0);					
+		start.setMinutes(0);
+		end.setHours(23);
+		end.setMinutes(59);
+		
+		timeString = "all day";
+	}
+	else {
+		start.setHours(startTimeInput.valueAsDate.getHours() + tzHourOffset);					
+		start.setMinutes(startTimeInput.valueAsDate.getMinutes());
+		end.setHours(endTimeInput.valueAsDate.getHours() + tzHourOffset);
+		end.setMinutes(endTimeInput.valueAsDate.getMinutes());
+		
+		timeString = start.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+	}
+	return timeString;
+}
 
 function getSelectedDays() {
 	let selectedDays = [];

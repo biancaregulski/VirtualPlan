@@ -280,24 +280,8 @@ input[type=text] {
 	align-items: center;
 }
 
-#time-input-start {
-	text-align: center;
-	padding-right: 10px;
-}
-
-#time-input-end {
-	text-align: center;
-	padding-left: 10px;
-	position: absolute;
-	right: 0;
-}
-
-#to {
-	position:absolute;
-	left: 0;
-	right: 0;
-	text-align: center;
-	padding: 0 10px;
+#time-input-start, #time-input-end {
+	width: 100%;
 }
 
 #all-day {
@@ -332,6 +316,10 @@ input[type=time] {
 	display: flex;
 	justify-content: space-between;
     align-items: center;
+}
+
+.event-label, .event-box {
+	flex: 1;
 }
 
 .event-info {

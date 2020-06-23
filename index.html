@@ -47,11 +47,17 @@ Released under the public domain
 								<input type="text" id="location-name-input" name="locationname" placeholder="Location" required/>
 								<div id="event-add-input"></div>
 								<div id="event-time-input">
-									<div class="row">
-										<input type="time" id="time-input-start" name="time-input" required/>
-										<input type="time" id="time-input-end" name="time-input" required/>
-										<div style="clear:both;"></div> 
-										<p id="to">to</p>
+									<div class="event-row">
+										<p class="event-label" id="start-label">Start time:</p>
+										<div class="event-box">
+											<input type="time" id="time-input-start" name="time-input" required/>
+										</div>
+									</div>
+									<div class="event-row">
+										<p class="event-label" id="end-label">End time:</p>
+										<div class="event-box">
+											<input type="time" id="time-input-end" name="time-input" required/>
+										</div>
 									</div>
 									<div style="margin-top:10px" >
 										<label id="all-day">
@@ -70,20 +76,20 @@ Released under the public domain
 							<form method="post" name="form1" id="form-save-event"> 
 								<span class="close" data-modal="modal-show-content">&times;</span>
 								<div class="event-row">
-									<p class="event-label" id="date-label" style="flex: 1;">Date:</p>
-									<div style="flex: 1;">
+									<p class="event-label" id="date-label">Date:</p>
+									<div class="event-box">
 										<p class="event-info" id="date-info"></p>
 									</div>
 								</div>
 								<div class="event-row">
-									<p class="event-label" id="name-label" style="flex: 1;">Event name:</p>
-									<div style="flex: 1;">
+									<p class="event-label" id="name-label">Event name:</p>
+									<div class="event-box">
 										<input class="event-info" type="text" id="name-label-input" name="eventname" required/>
 									</div>
 								</div>
 								<div class="event-row">
-									<p class="event-label" id="location-label" style="flex: 1;">Location:</p>
-									<div style="flex: 1;">
+									<p class="event-label" id="location-label">Location:</p>
+									<div class="event-box">
 										<input class="event-info" type="text" id="location-label-input" name="locationname" required/>
 									</div>
 								</div>
