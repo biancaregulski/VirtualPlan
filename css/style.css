@@ -44,6 +44,12 @@ body {
 	padding: 0 10% 0 10%;
 }
 
+@media (max-width: 1000px){
+	#page {
+		padding: 0;
+	}
+}
+
 h1 {
 	margin: 0;
 	padding: 20px 0 20px 0;
@@ -111,7 +117,7 @@ h1 {
 }
 
 .day-name {
-	padding: 1vh;
+	padding: 5px;
 	border-top: 1px solid var(--color-border);
 	border-bottom: 1px solid var(--color-border);
 	border-right: 1px solid var(--color-border);
@@ -122,9 +128,9 @@ h1 {
 	border-right: 1px solid var(--color-border);
 	cursor: pointer;
 	height: 18vh;
+	min-height: 100px;
 	background-color: var(--color-calendar-box);
 	transition: background-color 300ms, color 300ms;
-	overflow: auto;
 }
 
 .day-number {
@@ -167,6 +173,29 @@ h1 {
 
 #button-add-event, #button-register {
 	margin-right: 10px;
+}
+
+@media (max-width: 800px){
+	#button-register {
+		visibility: collapse;
+		display: none;
+		margin-right: 0;
+	}
+	#header {
+		grid-template-columns: 1fr 2fr 1fr;
+	}
+}
+
+@media (max-width: 500px){
+	#button-login, #button-add-event {
+		padding: 10px 14px;
+	}
+	#month-year {
+		font-size: 16px;
+	}	
+	#header {
+		grid-template-columns: 1fr 2fr 1fr;
+	}
 }
 
 .modal {
