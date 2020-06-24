@@ -28,15 +28,6 @@ Released under the public domain
 					<button class="event-button" id="button-register">Register</button>
 
 				</div>
-				<div id="modal-add-alert" class="modal">
-					<div class="modal-content">
-						<div class="modal-elements">
-							<span class="close">&times;</span>
-							<p class="alert-text">Select one or more days to add an event.</p>
-							<button class="event-button modal-button" id="button-add-ok" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
-						</div>
-					</div>
-				</div>
 				<div id="modal-add" class="modal">
 					<div id="modal-add-content" class="modal-content">
 						<div class="modal-elements">
@@ -65,7 +56,8 @@ Released under the public domain
 										</label>
 									</div>
 								</div>
-								<input class="event-button modal-button" id="button-add-submit" type="submit"  onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)" value="Add">
+								<input class="event-button modal-button" id="button-add-submit" type="submit"  
+								onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)" value="Add">
 							</form>
 						</div>
 					</div>
@@ -95,8 +87,10 @@ Released under the public domain
 								</div>
 								<div id="event-show-input"></div>
 								<div class="event-row">
-									<input class="event-button modal-button" id="button-save" type="submit" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)" value="Save"></input>
-									<button class="event-button modal-button" id="button-delete" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">Delete</button>
+									<input class="event-button modal-button" id="button-save" type="submit" onmouseover="changeButtonHover(this)" 
+									onmouseleave="revertButtonColor(this)" value="Save"></input>
+									<button class="event-button modal-button" id="button-delete" onmouseover="changeButtonHover(this)" 
+									onmouseleave="revertButtonColor(this)">Delete</button>
 								</div>
 							</form>
 						</div>
@@ -110,8 +104,10 @@ Released under the public domain
 							<p class="alert-text">Are you sure you would like to overwrite this event?</p>
 							<div id="save-buttons"></div>
 							<div id="buttons-cancel-ok" class="event-row">
-								<button class="event-button modal-button" id="button-cancel" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">Cancel</button>
-								<button class="event-button modal-button" id="button-ok" onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
+								<button class="event-button modal-button" id="button-cancel" onmouseover="changeButtonHover(this)" 
+								onmouseleave="revertButtonColor(this)">Cancel</button>
+								<button class="event-button modal-button" id="button-ok" onmouseover="changeButtonHover(this)" 
+								onmouseleave="revertButtonColor(this)">OK</button>
 							</div>
 						</div>
 					</div>
@@ -126,6 +122,19 @@ Released under the public domain
 						</div>
 					</div>
 				</div>
+				
+				
+				<div id="modal-add-alert" class="modal">
+					<div class="modal-content">
+						<div class="modal-elements">
+							<span class="close">&times;</span>
+							<p id="alert-label" class="alert-text"></p>
+							<button class="event-button modal-button" id="button-add-ok" 
+							onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 			<div class="disable-select" id="day-of-week"></div>
 			<div class="disable-select" id="app-calendar"></div>

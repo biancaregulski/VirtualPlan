@@ -99,7 +99,7 @@ function getSeason() {
   if (displayMonth >= 2 && displayMonth <= 4)        return 0;    // spring
   else if (displayMonth >= 5 && displayMonth <= 7)   return 1;    // summer
   else if (displayMonth >= 8 && displayMonth <= 10)  return 2;    // fall
-  else                              return 3;    // winter
+  else  return 3;    // winter
 }
 
 // change days of week color and highlight color
@@ -170,7 +170,7 @@ document.getElementById("button-add-event").onclick = function() {
 	if (getSelectedDays().length == 0) {
 		// no selected dates -- show alert message
 		addAlertButton.style.backgroundColor = buttonColor;
-
+		alertLabel.innerHTML = "Select one or more days to add an event.";
 		modalAddAlert.style.display = "flex";
 	} 
 	else {
@@ -181,6 +181,7 @@ document.getElementById("button-add-event").onclick = function() {
 		document.getElementById("new-event-title").style.color = buttonColor;
 		submitAddButton.style.backgroundColor = buttonColor;
 		modalAdd.style.display = "flex";
+		addEventForm.reset();
 	}
 }
 
@@ -222,11 +223,22 @@ allDayCheckBox.addEventListener('change', (event) => {
 	
 });
 
-document.getElementById("form-add-event").addEventListener("submit", function() {
-	// TODO: check that start time is before end time
+var addEventForm = document.getElementById("form-add-event");
+var saveEventForm = document.getElementById("form-save-event");
+var alertLabel = document.getElementById("alert-label");
+
+addEventForm.addEventListener("submit", function() {
 	event.preventDefault();			// prevents page from reloading
-	// add event to array of selected days
 	
+	if (startTimeInput.value > endTimeInput.value) {
+		let buttonColor = seasonColors[getSeason()];
+		addAlertButton.style.backgroundColor = buttonColor;
+		alertLabel.innerHTML = "End time cannot be later than start time.";
+		modalAddAlert.style.display = "flex";
+		return false;
+	}
+	
+	// add event to array of selected days
 	let selectedDays = getSelectedDays();	
 	let startTime = new Date();					// make this for selectedDays[0]
 	let endTime = new Date();
@@ -292,7 +304,7 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 			if (e.stopPropagation) e.stopPropagation();
 
 			
-			document.getElementById("form-save-event").addEventListener("submit", function() {
+			saveEventForm.addEventListener("submit", function() {
 				event.preventDefault();			// prevents page from reloading
 				
 				// display save alert message
@@ -318,7 +330,6 @@ document.getElementById("form-add-event").addEventListener("submit", function() 
 					modalSave.style.display = "none";
 					modalShow.style.display = "none";
 				}
-				
 			});
 			
 			deleteButton.onclick = function() {

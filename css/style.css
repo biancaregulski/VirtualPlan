@@ -128,9 +128,9 @@ h1 {
 	border-right: 1px solid var(--color-border);
 	cursor: pointer;
 	height: 18vh;
-	min-height: 100px;
 	background-color: var(--color-calendar-box);
 	transition: background-color 300ms, color 300ms;
+	overflow-y: auto;	/* show scroll bar if contents exceed height */
 }
 
 .day-number {
@@ -186,7 +186,7 @@ h1 {
 	}
 }
 
-@media (max-width: 500px){
+@media (max-width: 550px){
 	#button-login, #button-add-event {
 		padding: 10px 14px;
 	}
