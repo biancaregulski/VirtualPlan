@@ -230,14 +230,12 @@ var locationInput = document.getElementById("location-label-input");
 var nameInput = document.getElementById("name-label-input");
 var eventDivs;
 
+
 addEventForm.addEventListener("submit", function() {
 	event.preventDefault();			// prevents page from reloading
 	
 	if (startTimeInput.value > endTimeInput.value) {
-		let buttonColor = seasonColors[getSeason()];
-		addAlertButton.style.backgroundColor = buttonColor;
-		alertLabel.innerHTML = "End time cannot be later than start time.";
-		modalAddAlert.style.display = "flex";
+		displayTimeErrorModal();
 		return false;
 	}
 	
@@ -245,9 +243,6 @@ addEventForm.addEventListener("submit", function() {
 	let selectedDays = getSelectedDays();	
 	let startTime = new Date();					// make this for selectedDays[0]
 	let endTime = new Date();
-	let timeString;
-	
-	timeString = generateEventLabel(startTime, endTime);
 	
 	deselectAllDays();
 	
@@ -262,7 +257,8 @@ addEventForm.addEventListener("submit", function() {
 			new Date(displayYear, displayMonth, dayNum, startTime.getHours(), startTime.getMinutes()), 
 			new Date(displayYear, displayMonth, dayNum, endTime.getHours(), endTime.getMinutes()));
 					
-		let eventDivIndex = eventDivs.push(createEventDiv(dayDiv, dayIndex, eventName.value)) - 1;
+		setTimes(dayEvent.start, dayEvent.end);
+		let eventDivIndex = eventDivs.push(createEventDiv(dayDiv, dayIndex, dayEvent)) - 1;
 		eventDivs[eventDivIndex].id = "event-" + selectedDays[i].toString() + "." + (eventDivIndex + 1).toString();
 		
 		let selectedDay = days[monthsSince1970][dayIndex];
@@ -276,6 +272,13 @@ addEventForm.addEventListener("submit", function() {
 	}
 	modalAdd.style.display = "none";
 });	
+
+function displayTimeErrorModal() {
+	let buttonColor = seasonColors[getSeason()];
+	addAlertButton.style.backgroundColor = buttonColor;
+	alertLabel.innerHTML = "End time cannot be later than start time.";
+	modalAddAlert.style.display = "flex";
+}
 
 function showEvent(dayEvent, eventDivs, eventDivIndex, dayIndex) {
 	// show event information from clicking on 
@@ -312,6 +315,11 @@ function showEvent(dayEvent, eventDivs, eventDivIndex, dayIndex) {
 	saveEventForm.addEventListener("submit", function() {
 		event.preventDefault();			// prevents page from reloading
 		
+		if (startTimeInput.value > endTimeInput.value) {
+			displayTimeErrorModal();
+			return false;
+		}
+		
 		// display save alert message
 		modalSave.style.display = "flex";
 		document.getElementById("save-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
@@ -325,13 +333,9 @@ function showEvent(dayEvent, eventDivs, eventDivIndex, dayIndex) {
 			dayEvent.name = nameInput.value;
 			dayEvent.loc = locationInput.value;
 			
+			setTimes(dayEvent.start, dayEvent.end);
 			
-			// TODO: start/end error checking
-			timeString = generateEventLabel(dayEvent.start, dayEvent.end);
-			
-			// update values on visible calendar event
-			let labelArray = [dayEvent.name, " @ ", timeString];		
-			eventDivs[eventDivIndex].innerHTML = labelArray.join("");
+			eventDivs[eventDivIndex].innerHTML = createEventLabel(dayEvent);
 			
 			modalSave.style.display = "none";
 			modalShow.style.display = "none";
@@ -367,19 +371,24 @@ function deleteEvent() {
 	
 }
 
-function createEventDiv(dayDiv, dayNum, eventNameText) {
+function createEventDiv(dayDiv, dayNum, dayEvent) {
 	let eventDiv = document.createElement("div");
 	eventDiv.className = "event";
 	
-	// display event with event name and starting hour/minute
-	let labelArray = [eventNameText, " @ ", timeString];
-	eventDiv.innerHTML = labelArray.join("");
+	eventDiv.innerHTML = createEventLabel(dayEvent);
 	eventDiv.style.backgroundColor = seasonColorsLight[getSeason()];
 
 	return eventDiv;
 }
 
-function generateEventLabel(start, end) {
+function createEventLabel(dayEvent) {
+	// display event with event name and starting hour/minute
+	let timeString = createTimeString(dayEvent.start, dayEvent.end);
+	let labelArray = [dayEvent.name, " @ ", timeString];
+	return labelArray.join("");
+}
+
+function setTimes(start, end) {
 	if (allDayCheckBox.checked || ((startTimeInput.valueAsDate.getHours() + tzHourOffset == 0 || 
 		startTimeInput.valueAsDate.getHours() + tzHourOffset == 24) && startTimeInput.valueAsDate.getMinutes() == 0 
 		&& endTimeInput.valueAsDate.getHours() + tzHourOffset == 23 && endTimeInput.valueAsDate.getMinutes() == 59)) {
@@ -388,15 +397,22 @@ function generateEventLabel(start, end) {
 		start.setMinutes(0);
 		end.setHours(23);
 		end.setMinutes(59);
-		
-		timeString = "all day";
 	}
 	else {
 		start.setHours(startTimeInput.valueAsDate.getHours() + tzHourOffset);					
 		start.setMinutes(startTimeInput.valueAsDate.getMinutes());
 		end.setHours(endTimeInput.valueAsDate.getHours() + tzHourOffset);
 		end.setMinutes(endTimeInput.valueAsDate.getMinutes());
-		
+	}
+}
+
+function createTimeString(start, end) {
+	if (allDayCheckBox.checked || ((startTimeInput.valueAsDate.getHours() + tzHourOffset == 0 || 
+		startTimeInput.valueAsDate.getHours() + tzHourOffset == 24) && startTimeInput.valueAsDate.getMinutes() == 0 
+		&& endTimeInput.valueAsDate.getHours() + tzHourOffset == 23 && endTimeInput.valueAsDate.getMinutes() == 59)) {
+		timeString = "all day";
+	}
+	else {		
 		timeString = start.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 	}
 	return timeString;
@@ -459,9 +475,10 @@ function updateMonth() {
 				eventDivs[i] = [];
 			
 				for (let j = 0; j < days[monthsSince1970][dayIndex].events.length; j++) {
-					let eventDivIndex = eventDivs[i].push(createEventDiv(dayDiv, dayNum, days[monthsSince1970][dayIndex].events[j].name)) - 1;	
+					let eventDivIndex = eventDivs[i].push(createEventDiv(dayDiv, dayNum, days[monthsSince1970][dayIndex].events[j])) - 1;	
 					eventDivs[i][eventDivIndex].id = "event-" + dayNum + "." + (eventDivIndex + 1).toString();
-					dayDiv.appendChild(eventDivs[i][eventDivIndex]);	
+					dayDiv.appendChild(eventDivs[i][eventDivIndex]);
+					
 					eventDivs[i][eventDivIndex].onclick = function() { 
 						showEvent(days[monthsSince1970][dayIndex].events[j], eventDivs[i], eventDivIndex, dayIndex);
 					}
