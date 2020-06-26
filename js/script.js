@@ -57,6 +57,7 @@ var days = [];
 
 var todayDate, todayMonth, todayYear, numDays, firstDayOfWeek;
 var displayMonth, displayYear;
+var monthsSince1970;			// keep track of months since 1970 for 2d array of days
 
 var today = new Date();
 var tzHourOffset = Math.round(today.getTimezoneOffset() / 60) + 1;		// adjust for time zone
@@ -82,6 +83,7 @@ function updateFirstDayVariables() {
 	firstDayOfWeek = firstDay.getDay();
 	displayMonth = firstDay.getMonth();
 	displayYear = firstDay.getFullYear();
+	monthsSince1970 = 0 - displayMonth + (12 * (1970 - displayYear));	
 	numDays = new Date(displayYear, displayMonth + 1, 0).getDate();
 }
 
@@ -226,6 +228,9 @@ allDayCheckBox.addEventListener('change', (event) => {
 var addEventForm = document.getElementById("form-add-event");
 var saveEventForm = document.getElementById("form-save-event");
 var alertLabel = document.getElementById("alert-label");
+var locationInput = document.getElementById("location-label-input");
+var nameInput = document.getElementById("name-label-input");
+var eventDivs;
 
 addEventForm.addEventListener("submit", function() {
 	event.preventDefault();			// prevents page from reloading
@@ -248,28 +253,25 @@ addEventForm.addEventListener("submit", function() {
 	
 	deselectAllDays();
 	
-	for (let i = 0; i < selectedDays.length; i++) {
-		let dayDiv = document.getElementById("day-".concat(selectedDays[i].toString()));
-		
-		let eventDiv = document.createElement("div");
-		eventDiv.className = "event";
-		
-		// display event with event name and starting hour/minute
-		let labelArray = [eventName.value, " @ ", timeString];
-		eventDiv.innerHTML = labelArray.join("");
-		eventDiv.style.backgroundColor = seasonColorsLight[getSeason()];
-		
+	let eventDivs = [];
+	
+	for (let i = 0; i < selectedDays.length; i++) {		
+		let dayIndex = selectedDays[i];
+		let dayNum = selectedDays[i] + 1;
+		let dayDiv = document.getElementById("day-" + dayNum.toString());
 		// create event object and add to each day's list of objects
 		let dayEvent = new Event(eventName.value, locationName.value, 
-			new Date(displayYear, displayMonth, selectedDays[i], startTime.getHours(), startTime.getMinutes()), 
-			new Date(displayYear, displayMonth, selectedDays[i], endTime.getHours(), endTime.getMinutes()));
-			
-		let dayIndex = selectedDays[i] - 1;
-		let selectedDay = days[dayIndex];
+			new Date(displayYear, displayMonth, dayNum, startTime.getHours(), startTime.getMinutes()), 
+			new Date(displayYear, displayMonth, dayNum, endTime.getHours(), endTime.getMinutes()));
+					
+		let eventDivIndex = eventDivs.push(createEventDiv(dayDiv, dayIndex, eventName.value)) - 1;
+		eventDivs[eventDivIndex].id = "event-" + selectedDays[i].toString() + "." + (eventDivIndex + 1).toString();
+		
+		let selectedDay = days[monthsSince1970][dayIndex];
 		let eventIndex = selectedDay.events.push(dayEvent) - 1;			// get index of newly added event
 		let selectedEvent = selectedDay.events[eventIndex];
 		
-		eventDiv.onclick = function() {
+		eventDivs[eventDivIndex].onclick = function() {
 			// show event information from clicking on labelArray
 			let dateArray = [dayEvent.start.getMonth() + 1, dayEvent.start.getDate(), dayEvent.start.getFullYear()];
 			let currentColor = seasonColors[getSeason()];			
@@ -282,9 +284,6 @@ addEventForm.addEventListener("submit", function() {
 			document.getElementById("event-show-input").appendChild(document.getElementById("event-time-input"));
 			
 			document.getElementById("date-info").innerHTML = dateArray.join("-");
-			
-			let locationInput = document.getElementById("location-label-input");
-			let nameInput = document.getElementById("name-label-input");
 
 			nameInput.value = dayEvent.name;
 			locationInput.value = dayEvent.loc;
@@ -316,7 +315,7 @@ addEventForm.addEventListener("submit", function() {
 				}
 				
 				okButton.onclick = function() {
-					//eventDiv.innerHTML = labelArray.join("");
+					//eventDivs[eventDivIndex].innerHTML = labelArray.join("");
 					// update values in days array
 					selectedEvent.name = nameInput.value;
 					selectedEvent.loc = locationInput.value;
@@ -325,7 +324,7 @@ addEventForm.addEventListener("submit", function() {
 					
 					// update values on visible calendar event
 					let labelArray = [selectedEvent.name, " @ ", timeString];					
-					eventDiv.innerHTML = labelArray.join("");
+					eventDivs[eventDivIndex].innerHTML = labelArray.join("");
 					
 					modalSave.style.display = "none";
 					modalShow.style.display = "none";
@@ -344,19 +343,32 @@ addEventForm.addEventListener("submit", function() {
 				}
 				
 				okButton.onclick = function() {
-					days[selectedDays[i] - 1].events.splice(index, 1);		// remove from array
-					eventDiv.remove();									// remove from calendar
+					days[monthsSince1970][selectedDays[i] - 1].events.splice(index, 1);		// remove from array
+					eventDivs[eventDivIndex].remove();									// remove from calendar
 					
 					modalDelete.style.display = "none";
 					modalShow.style.display = "none";
 				}
 			}
 		}
-		dayDiv.appendChild(eventDiv);
-		
+		dayDiv.appendChild(eventDivs[eventDivIndex]);		
 	}
 	modalAdd.style.display = "none";
 });	
+
+
+
+function createEventDiv(dayDiv, dayNum, eventNameText) {
+	let eventDiv = document.createElement("div");
+	eventDiv.className = "event";
+	
+	// display event with event name and starting hour/minute
+	let labelArray = [eventNameText, " @ ", timeString];
+	eventDiv.innerHTML = labelArray.join("");
+	eventDiv.style.backgroundColor = seasonColorsLight[getSeason()];
+
+	return eventDiv;
+}
 
 function generateEventLabel(start, end) {
 	if (allDayCheckBox.checked || ((startTimeInput.valueAsDate.getHours() + tzHourOffset == 0 || 
@@ -383,9 +395,9 @@ function generateEventLabel(start, end) {
 
 function getSelectedDays() {
 	let selectedDays = [];
-	for (var i = 0; i < days.length; i++) {
-	   if (days[i].selected == true) {
-		   selectedDays.push(i + 1);
+	for (var i = 0; i < days[monthsSince1970].length; i++) {
+	   if (days[monthsSince1970][i].selected == true) {
+		   selectedDays.push(i);
 	   }
 	}
 	return selectedDays;
@@ -399,7 +411,10 @@ function updateMonth() {
 		prevDay.remove()
 	});
 	
-	days = [];
+	if (typeof days[monthsSince1970] == "undefined") {
+		days[monthsSince1970] = [];
+	}
+	
 	
 	let firstDateStarted = false;
 	let column = 0;
@@ -407,41 +422,61 @@ function updateMonth() {
 	let i = 0;
 	while (i < numDays) {
 		if (column % 7 == firstDayOfWeek) {
-			i++;
+			let dayIndex = i;
+			let dayNum = i + 1;
 			let dayNumDiv =  document.createElement("p");
 			dayNumDiv.className = "day-number";
-			if (todayMonth == displayMonth && todayDate == i) {
+			if (todayMonth == displayMonth && todayDate == dayNum) {
 				// underline and change color for today's number
 				dayNumDiv.style.color = seasonColors[getSeason()];
 				dayNumDiv.style.fontWeight = "bold";
 				dayNumDiv.style.textDecoration = "underline";
 			}
-			dayNumDiv.appendChild(document.createTextNode(i));
+			dayNumDiv.appendChild(document.createTextNode(dayNum));
 
 			dayDiv = document.createElement("div");
 			dayDiv.className = "day";
-			dayDiv.id = "day-".concat(i.toString());
-			dayDiv.dataset.num = i;
+			dayDiv.id = "day-" + dayNum.toString();
+			dayDiv.dataset.num = dayNum;
 			dayDiv.appendChild(dayNumDiv);
 
-			// create Day object
-			let newDay = new Day();
-			days.push(newDay);
+			if (typeof days[monthsSince1970][dayIndex] == "undefined") {					// if day not in array, push it	
+				// if array has not already been added
+				// create Day object
+				let newDay = new Day();
+				days[monthsSince1970].push(newDay);
+			}
+			else if (typeof days[monthsSince1970][dayIndex].events == "undefined") {		
+				//eventDivs = [];
+			}
+
+			else {									// if day has events, display them
+				// display events if array has already been added
+				eventDivs = [];
+				
+				// TODO: fix, doesn't show last day
+				for (let j = 0; j < days[monthsSince1970][dayIndex].events.length; j++) {
+					let eventDivIndex = eventDivs.push(createEventDiv(dayDiv, dayNum, days[monthsSince1970][dayIndex].events[j].name)) - 1;
+					eventDivs[eventDivIndex].id = "event-" + dayNum + "." + (eventDivIndex + 1).toString();
+					dayDiv.appendChild(eventDivs[eventDivIndex]);	
+				}
+			}
 
 			// when box is clicked, check if box is selected
 			dayDiv.onclick = function() {
 				let index = parseInt(this.dataset.num) - 1;
-				if (days[index].selected == true) {
-				  days[index].selected = false;
+				if (days[monthsSince1970][index].selected == true) {
+				  days[monthsSince1970][index].selected = false;
 				  this.style.backgroundColor = defaultBoxColor;
 				}
 				else {
-				  days[index].selected = true;
+				  days[monthsSince1970][index].selected = true;
 				  this.style.backgroundColor = selectedBoxColor;
 				}
 			};
 			calendarDiv.appendChild(dayDiv);
 			firstDateStarted = true;
+			i++;
 		}
 		else {
 			dayDiv = document.createElement("div");
@@ -457,7 +492,7 @@ function deselectAllDays() {
 	for (var i = 0; i < dayElements.length; i++) {
 		if (dayElements.item(i).hasAttribute("id")) {
 			let index = parseInt(dayElements.item(i).dataset.num) - 1;
-			days[index].selected = false;
+			days[monthsSince1970][index].selected = false;
 			dayElements.item(i).style.backgroundColor = defaultBoxColor;
 		}
 	}
