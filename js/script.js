@@ -70,6 +70,32 @@ changeCalendarColor(seasonColors[getSeason()]);
 displayDaysOfWeek();
 updateMonth();
 
+document.onkeydown = checkKey;
+
+// button presses
+function checkKey(e) {
+    e = e || window.event;
+	if (!getOpenModal()) {
+		if (e.keyCode == '37') {
+		   // left arrow
+		   backwardMonth();
+		}
+		else if (e.keyCode == '39') {
+		   // right arrow
+		   forwardMonth();
+		}
+	}
+}
+
+function getOpenModal() {
+	let modals = document.getElementsByClassName("modal");
+	for (let i = modals.length - 1; i >= 0; i--) {
+	   if (window.getComputedStyle(modals.item(i)).display !== "none") {
+		   return modals.item(i);
+	   }
+	}
+	return false;		// no modals are open
+}
 
 function updateTodayVariables() {
 	todayDate = today.getDate();
@@ -107,20 +133,28 @@ function changeCalendarColor(newcolor) {
   weekDiv.style.backgroundColor = newcolor;
   titleHeaderDiv.style.color = newcolor;
 }
-
-// change calendar to previous month
+/*
 document.getElementById("back-arrow").onclick = function() {
-  firstDay.setMonth(displayMonth - 1);
-  updateFirstDayVariables();
-  updateMonth();
-  // if going to a month where the season changes, change color to match season
-  if (displayMonth % 3 == 1) {
-    changeCalendarColor(seasonColors[getSeason()]);
-  }
+
 }
 
-// change calendar to next month
 document.getElementById("forward-arrow").onclick = function() {
+
+}
+*/
+function backwardMonth() {
+	// change calendar to previous month
+	firstDay.setMonth(displayMonth - 1);
+	updateFirstDayVariables();
+	updateMonth();
+	// if going to a month where the season changes, change color to match season
+	if (displayMonth % 3 == 1) {
+	changeCalendarColor(seasonColors[getSeason()]);
+	}
+}
+
+function forwardMonth() {
+	// change calendar to next month
 	firstDay.setMonth(displayMonth + 1);
 	updateFirstDayVariables();
 	updateMonth();

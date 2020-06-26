@@ -28,10 +28,10 @@ Released under the public domain
 	--color-calendar-box-selected: whitesmoke;
 	--color-button: #E6E6E6;
 	--color-button-hover: lightgray;
-	--color-line: darkgray;
 	--color-input: darkgray;
-	--color-diamond: gray;
-	--color-main-font: #575757;
+	--color-line: silver;
+	--color-diamond: #A0A0A0;
+	--color-main-font: #787878;
 	font-family: 'Helvetica', 'Arial', sans-serif;
 };
 
@@ -97,6 +97,7 @@ h1 {
 #month-year {
 	font-size: 22px;
 	color: var(--color-main-font);
+	min-width: 166px;
 }
 
 #day-of-week {
@@ -192,6 +193,7 @@ h1 {
 	}
 	#month-year {
 		font-size: 16px;
+		min-width: 118px;
 	}	
 	#header {
 		grid-template-columns: 1fr 2fr 1fr;
