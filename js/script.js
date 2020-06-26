@@ -25,9 +25,11 @@ class Event {
 	}
 }
 
-const calendarDiv = document.querySelector("#app-calendar");
-const weekDiv = document.querySelector("#day-of-week");
-const titleHeaderDiv = document.querySelector("#title-header");
+const calendarDiv = document.getElementById("app-calendar");
+const weekDiv = document.getElementById("day-of-week");
+const titleHeaderDiv = document.getElementById("title-header");
+const footerText = document.getElementById("footer-text");
+const footerLink = document.getElementById("footer-link");
 
 var defaultBoxColor = getComputedStyle(document.body).getPropertyValue("--color-calendar-box");
 var selectedBoxColor = getComputedStyle(document.body).getPropertyValue("--color-calendar-box-selected");
@@ -132,6 +134,8 @@ function getSeason() {
 function changeCalendarColor(newcolor) {
   weekDiv.style.backgroundColor = newcolor;
   titleHeaderDiv.style.color = newcolor;
+  //footerText.style.color = newcolor;
+  footerLink.style.color = newcolor;
 }
 /*
 document.getElementById("back-arrow").onclick = function() {
