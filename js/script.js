@@ -6,8 +6,6 @@ Released under the public domain
 
 /*
 TODO:
-- month/day shouldn't overlap buttons
-- use holiday api
 - fade out from modals
 */
 
@@ -269,94 +267,105 @@ addEventForm.addEventListener("submit", function() {
 		
 		let selectedDay = days[monthsSince1970][dayIndex];
 		let eventIndex = selectedDay.events.push(dayEvent) - 1;			// get index of newly added event
-		let selectedEvent = selectedDay.events[eventIndex];
 		
-		eventDivs[eventDivIndex].onclick = function() {
-			// show event information from clicking on labelArray
-			let dateArray = [dayEvent.start.getMonth() + 1, dayEvent.start.getDate(), dayEvent.start.getFullYear()];
-			let currentColor = seasonColors[getSeason()];			
-			
-			let startString = dayEvent.start.getHours().toString().padStart(2, '0') + ':' + 
-			dayEvent.start.getMinutes().toString().padStart(2, '0');
-			let endString = dayEvent.end.getHours().toString().padStart(2, '0') + ':' + 
-			dayEvent.end.getMinutes().toString().padStart(2, '0');
-			
-			document.getElementById("event-show-input").appendChild(document.getElementById("event-time-input"));
-			
-			document.getElementById("date-info").innerHTML = dateArray.join("-");
-
-			nameInput.value = dayEvent.name;
-			locationInput.value = dayEvent.loc;
-			startTimeInput.value = startString;
-			endTimeInput.value = endString;
-			
-			deleteButton.style.backgroundColor = currentColor;
-			saveButton.style.backgroundColor = currentColor;
-			modalShow.style.display = "flex";
-			
-			cancelButton.style.backgroundColor = currentColor;
-			okButton.style.backgroundColor = currentColor;
-			
-			// prevent clicking on event to affect selection of day box underneath
-			if (!e) var e = window.event;
-			e.cancelBubble = true;
-			if (e.stopPropagation) e.stopPropagation();
-
-			
-			saveEventForm.addEventListener("submit", function() {
-				event.preventDefault();			// prevents page from reloading
-				
-				// display save alert message
-				modalSave.style.display = "flex";
-				document.getElementById("save-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
-				
-				cancelButton.onclick = function() {
-					modalSave.style.display = "none";
-				}
-				
-				okButton.onclick = function() {
-					//eventDivs[eventDivIndex].innerHTML = labelArray.join("");
-					// update values in days array
-					selectedEvent.name = nameInput.value;
-					selectedEvent.loc = locationInput.value;
-					
-					timeString = generateEventLabel(selectedEvent.start, selectedEvent.end);
-					
-					// update values on visible calendar event
-					let labelArray = [selectedEvent.name, " @ ", timeString];					
-					eventDivs[eventDivIndex].innerHTML = labelArray.join("");
-					
-					modalSave.style.display = "none";
-					modalShow.style.display = "none";
-				}
-			});
-			
-			deleteButton.onclick = function() {
-				event.preventDefault();			// prevents page from reloading
-				
-				// display delete alert message
-				modalDelete.style.display = "flex";
-				document.getElementById("delete-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
-				
-				cancelButton.onclick = function() {
-					modalDelete.style.display = "none";
-				}
-				
-				okButton.onclick = function() {
-					days[monthsSince1970][selectedDays[i] - 1].events.splice(index, 1);		// remove from array
-					eventDivs[eventDivIndex].remove();									// remove from calendar
-					
-					modalDelete.style.display = "none";
-					modalShow.style.display = "none";
-				}
-			}
-		}
+		eventDivs[eventDivIndex].onclick = function() { 
+			showEvent(dayEvent, eventDivs, eventDivIndex, dayIndex); 
+		};
+		
 		dayDiv.appendChild(eventDivs[eventDivIndex]);		
 	}
 	modalAdd.style.display = "none";
 });	
 
+function showEvent(dayEvent, eventDivs, eventDivIndex, dayIndex) {
+	// show event information from clicking on 
+	
+	let dateArray = [dayEvent.start.getMonth() + 1, dayEvent.start.getDate(), dayEvent.start.getFullYear()];
+	let currentColor = seasonColors[getSeason()];			
+	
+	let startString = dayEvent.start.getHours().toString().padStart(2, '0') + ':' + 
+	dayEvent.start.getMinutes().toString().padStart(2, '0');
+	let endString = dayEvent.end.getHours().toString().padStart(2, '0') + ':' + 
+	dayEvent.end.getMinutes().toString().padStart(2, '0');
+	
+	document.getElementById("event-show-input").appendChild(document.getElementById("event-time-input"));
+	
+	document.getElementById("date-info").innerHTML = dateArray.join("-");
 
+	nameInput.value = dayEvent.name;
+	locationInput.value = dayEvent.loc;
+	startTimeInput.value = startString;
+	endTimeInput.value = endString;
+	
+	deleteButton.style.backgroundColor = currentColor;
+	saveButton.style.backgroundColor = currentColor;
+	modalShow.style.display = "flex";
+	
+	cancelButton.style.backgroundColor = currentColor;
+	okButton.style.backgroundColor = currentColor;
+	
+	// prevent clicking on event to affect selection of day box underneath
+	if (!e) var e = window.event;
+	e.cancelBubble = true;
+	if (e.stopPropagation) e.stopPropagation();
+	
+	saveEventForm.addEventListener("submit", function() {
+		event.preventDefault();			// prevents page from reloading
+		
+		// display save alert message
+		modalSave.style.display = "flex";
+		document.getElementById("save-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
+		
+		cancelButton.onclick = function() {
+			modalSave.style.display = "none";
+		}
+		
+		okButton.onclick = function() {
+			// update values in days array
+			dayEvent.name = nameInput.value;
+			dayEvent.loc = locationInput.value;
+			
+			
+			// TODO: start/end error checking
+			timeString = generateEventLabel(dayEvent.start, dayEvent.end);
+			
+			// update values on visible calendar event
+			let labelArray = [dayEvent.name, " @ ", timeString];		
+			eventDivs[eventDivIndex].innerHTML = labelArray.join("");
+			
+			modalSave.style.display = "none";
+			modalShow.style.display = "none";
+		}
+	});
+	
+	deleteButton.onclick = function() {
+		event.preventDefault();			// prevents page from reloading
+		
+		// display delete alert message
+		modalDelete.style.display = "flex";
+		document.getElementById("delete-buttons").appendChild(document.getElementById("buttons-cancel-ok"));
+		
+		cancelButton.onclick = function() {
+			modalDelete.style.display = "none";
+		}
+		
+		okButton.onclick = function() {
+			days[monthsSince1970][dayIndex].events.splice(eventDivIndex, 1);		// remove from array
+			eventDivs[eventDivIndex].remove();								// remove from calendar
+			
+			modalDelete.style.display = "none";
+			modalShow.style.display = "none";
+		}
+	}
+}
+
+function saveEvent() {
+	
+}
+
+function deleteEvent() {
+	
+}
 
 function createEventDiv(dayDiv, dayNum, eventNameText) {
 	let eventDiv = document.createElement("div");
@@ -395,7 +404,7 @@ function generateEventLabel(start, end) {
 
 function getSelectedDays() {
 	let selectedDays = [];
-	for (var i = 0; i < days[monthsSince1970].length; i++) {
+	for (let i = 0; i < days[monthsSince1970].length; i++) {
 	   if (days[monthsSince1970][i].selected == true) {
 		   selectedDays.push(i);
 	   }
@@ -414,13 +423,13 @@ function updateMonth() {
 	if (typeof days[monthsSince1970] == "undefined") {
 		days[monthsSince1970] = [];
 	}
-	
-	
+	var eventDivs = [];
+
 	let firstDateStarted = false;
 	let column = 0;
 	let dayDiv, dayNumDiv;
 	let i = 0;
-	while (i < numDays) {
+	for (let i = 0; i < numDays; i++) {
 		if (column % 7 == firstDayOfWeek) {
 			let dayIndex = i;
 			let dayNum = i + 1;
@@ -440,25 +449,22 @@ function updateMonth() {
 			dayDiv.dataset.num = dayNum;
 			dayDiv.appendChild(dayNumDiv);
 
-			if (typeof days[monthsSince1970][dayIndex] == "undefined") {					// if day not in array, push it	
-				// if array has not already been added
-				// create Day object
+			if (typeof days[monthsSince1970][dayIndex] == "undefined") {					
+				// if day not in array, push it
 				let newDay = new Day();
 				days[monthsSince1970].push(newDay);
 			}
-			else if (typeof days[monthsSince1970][dayIndex].events == "undefined") {		
-				//eventDivs = [];
-			}
-
-			else {									// if day has events, display them
+			else if (typeof days[monthsSince1970][dayIndex].events !== "undefined") {		
 				// display events if array has already been added
-				eventDivs = [];
-				
-				// TODO: fix, doesn't show last day
+				eventDivs[i] = [];
+			
 				for (let j = 0; j < days[monthsSince1970][dayIndex].events.length; j++) {
-					let eventDivIndex = eventDivs.push(createEventDiv(dayDiv, dayNum, days[monthsSince1970][dayIndex].events[j].name)) - 1;
-					eventDivs[eventDivIndex].id = "event-" + dayNum + "." + (eventDivIndex + 1).toString();
-					dayDiv.appendChild(eventDivs[eventDivIndex]);	
+					let eventDivIndex = eventDivs[i].push(createEventDiv(dayDiv, dayNum, days[monthsSince1970][dayIndex].events[j].name)) - 1;	
+					eventDivs[i][eventDivIndex].id = "event-" + dayNum + "." + (eventDivIndex + 1).toString();
+					dayDiv.appendChild(eventDivs[i][eventDivIndex]);	
+					eventDivs[i][eventDivIndex].onclick = function() { 
+						showEvent(days[monthsSince1970][dayIndex].events[j], eventDivs[i], eventDivIndex, dayIndex);
+					}
 				}
 			}
 
@@ -476,20 +482,20 @@ function updateMonth() {
 			};
 			calendarDiv.appendChild(dayDiv);
 			firstDateStarted = true;
-			i++;
 		}
 		else {
 			dayDiv = document.createElement("div");
 			dayDiv.className = "day";
 			calendarDiv.appendChild(dayDiv);
 			column++;
+			i--;
 		}
 	}
 }
 
 function deselectAllDays() {
 	var dayElements = document.getElementsByClassName("day");
-	for (var i = 0; i < dayElements.length; i++) {
+	for (let i = 0; i < dayElements.length; i++) {
 		if (dayElements.item(i).hasAttribute("id")) {
 			let index = parseInt(dayElements.item(i).dataset.num) - 1;
 			days[monthsSince1970][index].selected = false;
