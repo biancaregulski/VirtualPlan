@@ -24,8 +24,8 @@ Released under the public domain
 					<button class="arrowButton" id=forward-arrow onclick="forwardMonth()">▶</button>
 				</div>
 				<div class="header-right">
-					<button class="event-button" id="button-login">Log in</button>
-					<button class="event-button" id="button-register">Register</button>
+					<button class="event-button" id="button-deselect">Deselect All</button>
+					<button class="event-button" id="button-select">Select All</button>
 				</div>
 			</div>
 			<div class="disable-select" id="day-of-week"></div>
@@ -37,6 +37,17 @@ Released under the public domain
 			</div>
 			
 			<!-- modals -->
+			<div id="modal-add-alert" class="modal">
+				<div class="modal-content">
+					<div class="modal-elements">
+						<span class="close">&times;</span>
+						<p id="alert-label" class="alert-text"></p>
+						<button class="event-button modal-button" id="button-add-ok" 
+						onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
+					</div>
+				</div>
+			</div>
+			</div>
 			<div id="modal-add" class="modal">
 				<div id="modal-add-content" class="modal-content">
 					<div class="modal-elements">
@@ -131,19 +142,6 @@ Released under the public domain
 					</div>
 				</div>
 			</div>
-			
-			
-			<div id="modal-add-alert" class="modal">
-				<div class="modal-content">
-					<div class="modal-elements">
-						<span class="close">&times;</span>
-						<p id="alert-label" class="alert-text"></p>
-						<button class="event-button modal-button" id="button-add-ok" 
-						onmouseover="changeButtonHover(this)" onmouseleave="revertButtonColor(this)">OK</button>
-					</div>
-				</div>
-			</div>
-		</div>
 		<script type="text/javascript" src="js/script.js"></script>
 	</body>
 </html> 

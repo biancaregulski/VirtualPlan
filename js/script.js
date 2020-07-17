@@ -6,7 +6,8 @@ Released under the public domain
 
 /*
 TODO:
-- fade out from modals
+- fade out from modals 
+- calendar pop-up
 */
 
 class Day {
@@ -72,7 +73,7 @@ changeCalendarColor(seasonColors[getSeason()]);
 displayDaysOfWeek();
 updateMonth();
 
-document.onkeydown = checkKey;
+document.onkeyup = checkKey;
 
 // button presses
 function checkKey(e) {
@@ -118,10 +119,12 @@ function displayDaysOfWeek() {
     let divElement = document.createElement("div");
     divElement.className = "day-name";
     divElement.appendChild(document.createTextNode(daysOfWeek[i]));
+	divElement.onclick = function() {
+		changeColumnSelection(i, !isColumnFull(i));
+	} 
     weekDiv.appendChild(divElement);
   }
 }
-
 
 function getSeason() {
   if (displayMonth >= 2 && displayMonth <= 4)        return 0;    // spring
@@ -137,15 +140,7 @@ function changeCalendarColor(newcolor) {
   //footerText.style.color = newcolor;
   footerLink.style.color = newcolor;
 }
-/*
-document.getElementById("back-arrow").onclick = function() {
 
-}
-
-document.getElementById("forward-arrow").onclick = function() {
-
-}
-*/
 function backwardMonth() {
 	// change calendar to previous month
 	firstDay.setMonth(displayMonth - 1);
@@ -168,12 +163,12 @@ function forwardMonth() {
 	}
 }
 
-document.getElementById("button-login").onclick = function() {
-	alert("To be implemented");
+document.getElementById("button-select").onclick = function() {
+	changeDaysSelection(true);
 }
 
-document.getElementById("button-register").onclick = function() {
-	alert("To be implemented");
+document.getElementById("button-deselect").onclick = function() {
+	changeDaysSelection(false);
 }
 
 var modalAddAlert = document.getElementById("modal-add-alert");
@@ -268,7 +263,6 @@ var locationInput = document.getElementById("location-label-input");
 var nameInput = document.getElementById("name-label-input");
 var eventDivs;
 
-
 addEventForm.addEventListener("submit", function() {
 	event.preventDefault();			// prevents page from reloading
 	
@@ -282,7 +276,7 @@ addEventForm.addEventListener("submit", function() {
 	let startTime = new Date();					// make this for selectedDays[0]
 	let endTime = new Date();
 	
-	deselectAllDays();
+	changeDaysSelection(false);
 	
 	let eventDivs = [];
 	
@@ -401,14 +395,6 @@ function showEvent(dayEvent, eventDivs, eventDivIndex, dayIndex) {
 	}
 }
 
-function saveEvent() {
-	
-}
-
-function deleteEvent() {
-	
-}
-
 function createEventDiv(dayDiv, dayNum, dayEvent) {
 	let eventDiv = document.createElement("div");
 	eventDiv.className = "event";
@@ -464,6 +450,64 @@ function getSelectedDays() {
 	   }
 	}
 	return selectedDays;
+}
+
+function isColumnFull(columnNum) {
+	var dayElements = document.getElementsByClassName("day");
+	let first;
+	
+	for (let i = 0; i < dayElements.length; i++) {
+		if (dayElements.item(i).hasAttribute("id") && i % 7 == columnNum) {
+			first = i;
+			break;
+		}
+	}
+	
+	for (let i = first; i < dayElements.length; i+= 7) {
+		let index = parseInt(dayElements.item(i).dataset.num) - 1;
+		if (!days[monthsSince1970][index].selected) return false;
+	}
+	return true;
+}
+
+function changeColumnSelection(columnNum, selectColumn) {
+	var dayElements = document.getElementsByClassName("day");
+	
+	for (let i = 0; i < dayElements.length; i++) {
+		if (dayElements.item(i).hasAttribute("id") && i % 7 == columnNum) {
+			first = i;
+			break;
+		}
+	}
+	
+	for (let i = first; i < dayElements.length; i+= 7) {
+		let index = parseInt(dayElements.item(i).dataset.num) - 1;
+		if (selectColumn) {
+			days[monthsSince1970][index].selected = true;
+			dayElements.item(i).style.backgroundColor = selectedBoxColor;
+		}
+		else {
+			days[monthsSince1970][index].selected = false;
+			dayElements.item(i).style.backgroundColor = defaultBoxColor;
+		}
+	}
+}
+
+function changeDaysSelection(selectDays) {
+	var dayElements = document.getElementsByClassName("day");
+	for (let i = 0; i < dayElements.length; i++) {
+		if (dayElements.item(i).hasAttribute("id")) {
+			let index = parseInt(dayElements.item(i).dataset.num) - 1;
+			if (selectDays) {
+				days[monthsSince1970][index].selected = true;
+				dayElements.item(i).style.backgroundColor = selectedBoxColor;
+			}
+			else {
+				days[monthsSince1970][index].selected = false;
+				dayElements.item(i).style.backgroundColor = defaultBoxColor;
+			}
+		}
+	}
 }
 
 function updateMonth() {
@@ -544,17 +588,6 @@ function updateMonth() {
 			calendarDiv.appendChild(dayDiv);
 			column++;
 			i--;
-		}
-	}
-}
-
-function deselectAllDays() {
-	var dayElements = document.getElementsByClassName("day");
-	for (let i = 0; i < dayElements.length; i++) {
-		if (dayElements.item(i).hasAttribute("id")) {
-			let index = parseInt(dayElements.item(i).dataset.num) - 1;
-			days[monthsSince1970][index].selected = false;
-			dayElements.item(i).style.backgroundColor = defaultBoxColor;
 		}
 	}
 }

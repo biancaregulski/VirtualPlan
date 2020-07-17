@@ -90,7 +90,7 @@ h1 {
 	display:inline-block;
 }
   
-#button-login, #button-register {
+#button-deselect, #button-select {
 	float: right;
 }
 
@@ -120,6 +120,7 @@ h1 {
 
 .day-name {
 	padding: 5px;
+	cursor: pointer;
 	border-top: 1px solid var(--color-border);
 	border-bottom: 1px solid var(--color-border);
 	border-right: 1px solid var(--color-border);
@@ -173,12 +174,12 @@ h1 {
 	background-color: var(--color-button-hover);
 }
 
-#button-add-event, #button-register {
+#button-add-event, #button-select {
 	margin-right: 10px;
 }
 
 @media (max-width: 800px){
-	#button-register {
+	#button-select {
 		visibility: collapse;
 		display: none;
 		margin-right: 0;
@@ -362,6 +363,10 @@ input[type=time] {
 	/*display: flex;
 	justify-content: space-between;*/
 	text-align: center;
+}
+
+#footer-link {
+	margin: 20px;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
